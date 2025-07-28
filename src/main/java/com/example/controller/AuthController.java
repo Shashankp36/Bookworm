@@ -7,7 +7,7 @@ import com.example.service.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.password.PasswordEncoder;
+//import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
@@ -19,13 +19,13 @@ public class AuthController {
     private final IUser userService;
     private final IShelf shelfService;
     
-    private final PasswordEncoder passwordEncoder;
+   // private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public AuthController(UserService userService, ShelfService shelfService, PasswordEncoder passwordEncoder) {
+    public AuthController(UserService userService, ShelfService shelfService) {
         this.userService = userService;
         this.shelfService = shelfService;
-        this.passwordEncoder = passwordEncoder;
+//        this.passwordEncoder = passwordEncoder;
     }
 
     // ---------- SIGN UP ----------
@@ -39,7 +39,7 @@ public class AuthController {
             return ResponseEntity.badRequest().body("Phone already exists");
         }
         
-        user.setUserPassword(passwordEncoder.encode(user.getUserPassword()));
+       // user.setUserPassword(passwordEncoder.encode(user.getUserPassword()));
 
         // Save User
         User savedUser = userService.createUser(user);
@@ -63,9 +63,13 @@ public class AuthController {
 
         User user = userOpt.get();
 
-        if (!passwordEncoder.matches(password, user.getUserPassword())) {
-            return ResponseEntity.status(401).body("Invalid email or password");
-        }
+//        if (!passwordEncoder.matches(password, user.getUserPassword())) {
+//            return ResponseEntity.status(401).body("Invalid email or password");
+//        }
+        
+        if (password.equals(user.getUserPassword())) {
+          return ResponseEntity.status(401).body("Invalid email or password");
+      }
 
         return ResponseEntity.ok("Login successful");
     }
