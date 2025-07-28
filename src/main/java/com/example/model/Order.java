@@ -5,7 +5,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "`Order`") // Use backticks because ORDER is a reserved keyword
+@Table(name = "Orders") // Use backticks because ORDER is a reserved keyword
 public class Order {
 
     @Id
