@@ -42,6 +42,11 @@ public List<OrderDetail> getOrderDetailsByOrder(Order order) {
 }
 
 @Override
+public List<OrderDetail> getOrderDetailsByOrderId(int orderId) {
+    return orderDetailRepository.findByOrderOrderId(orderId);
+}
+
+@Override
 public List<OrderDetail> getOrderDetailsByProduct(Product product) {
     return orderDetailRepository.findByProduct(product);
 }
