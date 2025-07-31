@@ -20,4 +20,6 @@ List<OrderDetail> getOrderDetailsByOrder(Order order);
 List<OrderDetail> getOrderDetailsByProduct(Product product);
 
 void deleteOrderDetailById(int id);
+
+List<OrderDetail> getOrderDetailsByOrderId(int orderId);
 }
