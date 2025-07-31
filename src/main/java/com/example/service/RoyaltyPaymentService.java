@@ -13,12 +13,12 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class RoyaltyPaymentService {
+public class RoyaltyPaymentService implements IRoyaltyPaymentService {
 
 @Autowired
 private RoyaltyPaymentRepository royaltyPaymentRepository;
 
-// Save a royalty payment
+@Override
 public RoyaltyPayment saveRoyaltyPayment(RoyaltyPayment royaltyPayment) {
     if (royaltyPayment.getPaymentDate() == null) {
         royaltyPayment.setPaymentDate(LocalDate.now());
@@ -26,43 +26,43 @@ public RoyaltyPayment saveRoyaltyPayment(RoyaltyPayment royaltyPayment) {
     return royaltyPaymentRepository.save(royaltyPayment);
 }
 
-// Get all royalty payments
-public List<RoyaltyPayment> getAllRoyaltyPayments() {
-    return royaltyPaymentRepository.findAll();
-}
-
-// Get royalty payment by ID
+@Override
 public Optional<RoyaltyPayment> getRoyaltyPaymentById(int id) {
     return royaltyPaymentRepository.findById(id);
 }
 
-// Delete royalty payment
+@Override
+public List<RoyaltyPayment> getAllRoyaltyPayments() {
+    return royaltyPaymentRepository.findAll();
+}
+
+@Override
 public void deleteRoyaltyPayment(int id) {
     royaltyPaymentRepository.deleteById(id);
 }
 
-// Get royalty payments by Payee Type and ID
+@Override
 public List<RoyaltyPayment> getByPayee(PayeeType payeeType, int payeeId) {
     return royaltyPaymentRepository.findByPayeeTypeAndPayeeId(payeeType, payeeId);
 }
 
-// Get royalty payments by Product ID
+@Override
 public List<RoyaltyPayment> getByProductId(int productId) {
     return royaltyPaymentRepository.findByProductProductId(productId);
 }
 
-// Get royalty payments by Order ID
+@Override
 public List<RoyaltyPayment> getByOrderId(int orderId) {
     return royaltyPaymentRepository.findByOrderOrderId(orderId);
 }
 
-// Get total royalty amount paid to a payee
+@Override
 public BigDecimal getTotalRoyaltyAmount(PayeeType payeeType, int payeeId) {
     return royaltyPaymentRepository.sumAmountByPayeeTypeAndPayeeId(payeeType, payeeId)
             .orElse(BigDecimal.ZERO);
 }
 
-// Get royalty payments by royalty type (purchase/rental)
+@Override
 public List<RoyaltyPayment> getByRoyaltyType(RoyaltyType royaltyType) {
     return royaltyPaymentRepository.findByRoyaltyType(royaltyType);
 }

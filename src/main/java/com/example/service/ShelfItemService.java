@@ -10,53 +10,61 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class ShelfItemService {
+public class ShelfItemService implements IShelfItemService {
+
+    private final ShelfItemRepository shelfItemRepository;
 
     @Autowired
-    private ShelfItemRepository shelfItemRepository;
+    public ShelfItemService(ShelfItemRepository shelfItemRepository) {
+        this.shelfItemRepository = shelfItemRepository;
+    }
 
-    // 1. Add a new shelf item
-    public ShelfItem addShelfItem(ShelfItem item) {
+    // 1. Add or update a shelf item
+    @Override
+    public ShelfItem saveShelfItem(ShelfItem item) {
         return shelfItemRepository.save(item);
     }
 
     // 2. Get all shelf items
+    @Override
     public List<ShelfItem> getAllShelfItems() {
         return shelfItemRepository.findAll();
     }
 
-    // 3. Get a specific shelf item by ID
+    // 3. Get shelf item by ID
+    @Override
     public Optional<ShelfItem> getShelfItemById(int id) {
         return shelfItemRepository.findById(id);
     }
 
-    // 4. Get all items for a specific shelf
-    public List<ShelfItem> getItemsByShelfId(int shelfId) {
-        return shelfItemRepository.findByShelfShelfId(shelfId);
-    }
-
-    // 5. Get all purchased items for a shelf
-    public List<ShelfItem> getPurchasedItemsByShelfId(int shelfId) {
-        return shelfItemRepository.findByShelfShelfIdAndAccessType(shelfId, AccessType.purchase);
-    }
-
-    // 6. Get all rented items for a shelf
-    public List<ShelfItem> getRentedItemsByShelfId(int shelfId) {
-        return shelfItemRepository.findByShelfShelfIdAndAccessType(shelfId, AccessType.rental);
-    }
-
-    // 7. Delete a shelf item
+    // 4. Delete shelf item
+    @Override
     public void deleteShelfItem(int id) {
         shelfItemRepository.deleteById(id);
     }
 
-    // 8. Check if a product already exists in the shelf
+    // 5. Get items by Shelf ID
+    public List<ShelfItem> getItemsByShelfId(int shelfId) {
+        return shelfItemRepository.findByShelfShelfId(shelfId);
+    }
+
+    // 6. Get purchased items by Shelf ID
+    public List<ShelfItem> getPurchasedItemsByShelfId(int shelfId) {
+        return shelfItemRepository.findByShelfShelfIdAndAccessType(shelfId, AccessType.purchase);
+    }
+
+    // 7. Get rented items by Shelf ID
+    public List<ShelfItem> getRentedItemsByShelfId(int shelfId) {
+        return shelfItemRepository.findByShelfShelfIdAndAccessType(shelfId, AccessType.rental);
+    }
+
+    // 8. Check if a product already exists in the shelf with specific access type
 //    public boolean isProductInShelf(int shelfId, int productId, AccessType type) {
-//        return shelfItemRepository.existsByShelfShelfIdAndAccessTypeAndProductId(shelfId, type, productId);
+//        return shelfItemRepository.existsByShelfShelfIdAndAccessTypeAndProductProductId(shelfId, type, productId);
 //    }
 
-    // 9. Update shelf item (optional)
+    // 9. Update shelf item
     public ShelfItem updateShelfItem(ShelfItem item) {
-        return shelfItemRepository.save(item);
+        return shelfItemRepository.save(item); // Save also updates if ID is present
     }
 }
