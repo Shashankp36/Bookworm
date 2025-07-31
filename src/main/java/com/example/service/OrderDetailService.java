@@ -20,32 +20,44 @@ public class OrderDetailService {
         this.orderDetailRepository = orderDetailRepository;
     }
 
-    // Create or update an OrderDetail
+    /**
+     * Save or update an OrderDetail entity.
+     */
     public OrderDetail saveOrUpdateOrderDetail(OrderDetail orderDetail) {
         return orderDetailRepository.save(orderDetail);
     }
 
-    // Get all OrderDetails
+    /**
+     * Retrieve all OrderDetails.
+     */
     public List<OrderDetail> getAllOrderDetails() {
         return orderDetailRepository.findAll();
     }
 
-    // Get OrderDetail by ID
+    /**
+     * Get a specific OrderDetail by its ID.
+     */
     public Optional<OrderDetail> getOrderDetailById(int id) {
         return orderDetailRepository.findById(id);
     }
 
-    // Get OrderDetails by Order
+    /**
+     * Get all OrderDetails associated with a specific Order.
+     */
     public List<OrderDetail> getOrderDetailsByOrder(Order order) {
         return orderDetailRepository.findByOrder(order);
     }
 
-    // Get OrderDetails by Product
+    /**
+     * Get all OrderDetails associated with a specific Product.
+     */
     public List<OrderDetail> getOrderDetailsByProduct(Product product) {
         return orderDetailRepository.findByProduct(product);
     }
 
-    // Delete OrderDetail by ID
+    /**
+     * Delete an OrderDetail by its ID.
+     */
     public void deleteOrderDetailById(int id) {
         orderDetailRepository.deleteById(id);
     }

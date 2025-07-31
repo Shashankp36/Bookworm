@@ -1,14 +1,13 @@
 package com.example.controller;
 
-
-
 import com.example.model.*;
 import com.example.service.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-//import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+
+import jakarta.servlet.http.HttpSession;
 
 import java.util.Optional;
 
@@ -18,14 +17,13 @@ public class AuthController {
 
     private final IUser userService;
     private final IShelf shelfService;
-    
-   // private final PasswordEncoder passwordEncoder;
+    private final ICartService cartService;
 
     @Autowired
-    public AuthController(UserService userService, ShelfService shelfService) {
+    public AuthController(UserService userService, ShelfService shelfService, CartService cartService) {
         this.userService = userService;
         this.shelfService = shelfService;
-//        this.passwordEncoder = passwordEncoder;
+        this.cartService = cartService;
     }
 
     // ---------- SIGN UP ----------
@@ -38,23 +36,30 @@ public class AuthController {
         if (userService.existsByPhone(user.getUserPhone())) {
             return ResponseEntity.badRequest().body("Phone already exists");
         }
-        
-       // user.setUserPassword(passwordEncoder.encode(user.getUserPassword()));
 
-        // Save User
+        // Save user
         User savedUser = userService.createUser(user);
 
-        // Create Shelf for the user
+        // Create and assign Shelf
         Shelf shelf = new Shelf();
         shelf.setUser(savedUser);
         shelfService.createOrUpdateShelf(shelf);
 
-        return ResponseEntity.ok("User registered successfully");
+        // Create and assign Cart
+        Cart cart = new Cart();
+        cart.setUser(savedUser);
+        cartService.saveCart(cart);
+
+        return ResponseEntity.ok("User registered successfully with shelf and cart");
     }
 
     // ---------- LOGIN ----------
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestParam String email, @RequestParam String password) {
+    public ResponseEntity<String> login(
+            @RequestParam String email,
+            @RequestParam String password,
+            HttpSession session) {
+
         Optional<User> userOpt = userService.getUserByEmail(email);
 
         if (userOpt.isEmpty()) {
@@ -63,14 +68,24 @@ public class AuthController {
 
         User user = userOpt.get();
 
-//        if (!passwordEncoder.matches(password, user.getUserPassword())) {
-//            return ResponseEntity.status(401).body("Invalid email or password");
-//        }
-        
-        if (password.equals(user.getUserPassword())) {
-          return ResponseEntity.status(401).body("Invalid email or password");
-      }
+        if (!password.equals(user.getUserPassword())) {
+            return ResponseEntity.status(401).body("Invalid email or password");
+        }
 
-        return ResponseEntity.ok("Login successful");
+        // Store user in session
+        session.setAttribute("user", user);
+
+        return ResponseEntity.ok("Login successful. User stored in session.");
     }
+    
+    
+ 
+
+ // ---------- LOGOUT ----------
+		 @PostMapping("/logout")
+		 public ResponseEntity<String> logout(HttpSession session) {
+		     session.invalidate(); // ends the current user session
+		     return ResponseEntity.ok("Logout successful. Session invalidated.");
+		 }
+
 }

@@ -7,50 +7,65 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 @Service
-public class CartService {
+public class CartService implements ICartService {
 
-    @Autowired
-    private CartRepository cartRepository;
 
-    // 1. Create a cart for a new user
-    public Cart createCartForUser(User user) {
-        Cart cart = new Cart();
-        cart.setUser(user);
-        cart.setCreatedAt(LocalDateTime.now());
-        return cartRepository.save(cart);
-    }
+@Autowired
+private CartRepository cartRepository;
 
-    // 2. Get a user's cart by their user ID
-    public Optional<Cart> getCartByUserId(int userId) {
-        return cartRepository.findByUserUserId(userId);
-    }
+// 1. Create a cart for a new user
+@Override
+public Cart createCartForUser(User user) {
+    Cart cart = new Cart();
+    cart.setUser(user);
+    cart.setCreatedAt(LocalDateTime.now());
+    return cartRepository.save(cart);
+}
 
-    // 3. Check if a user already has a cart
-    public boolean doesCartExistForUser(int userId) {
-        return cartRepository.findByUserUserId(userId).isPresent();
-    }
+// 2. Get a user's cart by their user ID
+@Override
+public Optional<Cart> getCartByUserId(int userId) {
+    return cartRepository.findByUserUserId(userId);
+}
 
-    // 4. Get cart by cart ID
-    public Optional<Cart> getCartById(int cartId) {
-        return cartRepository.findById(cartId);
-    }
+// 3. Check if a user already has a cart
+@Override
+public boolean doesCartExistForUser(int userId) {
+    return cartRepository.findByUserUserId(userId).isPresent();
+}
 
-    // 5. Save or update a cart
-    public Cart saveCart(Cart cart) {
-        return cartRepository.save(cart);
-    }
+// 4. Get cart by cart ID
+@Override
+public Optional<Cart> getCartById(int cartId) {
+    return cartRepository.findById(cartId);
+}
 
-    // 6. Delete a cart (e.g., after checkout or user deletion)
-    public void deleteCartById(int cartId) {
-        cartRepository.deleteById(cartId);
-    }
+// 5. Save or update a cart
+@Override
+public Cart saveCart(Cart cart) {
+    return cartRepository.save(cart);
+}
 
-    // 7. Delete cart by user ID (optional)
-    public void deleteCartByUserId(int userId) {
-        Optional<Cart> optionalCart = cartRepository.findByUserUserId(userId);
-        optionalCart.ifPresent(cart -> cartRepository.deleteById(cart.getCartId()));
-    }
+// 6. Get all carts
+@Override
+public List<Cart> getAllCarts() {
+    return cartRepository.findAll();
+}
+
+// 7. Delete a cart by cart ID
+@Override
+public void deleteCart(int id) {
+    cartRepository.deleteById(id);
+}
+
+// 8. Delete a cart by user ID
+@Override
+public void deleteCartByUserId(int userId) {
+    Optional<Cart> optionalCart = cartRepository.findByUserUserId(userId);
+    optionalCart.ifPresent(cart -> cartRepository.deleteById(cart.getCartId()));
+}
 }

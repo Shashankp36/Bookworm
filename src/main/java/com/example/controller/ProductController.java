@@ -66,19 +66,19 @@ public class ProductController {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/by-genre")
+    @GetMapping("/byGenre")
     public ResponseEntity<List<Product>> getByGenre(@RequestParam String name) {
         return ResponseEntity.ok(productService.findByGenreName(name));
     }
 
     // Get products by language
-    @GetMapping("/by-language")
+    @GetMapping("/byLanguage")
     public ResponseEntity<List<Product>> getByLanguage(@RequestParam String name) {
         return ResponseEntity.ok(productService.findByLanguageName(name));
     }
 
     // Get products by author
-    @GetMapping("/by-author")
+    @GetMapping("/byAuthor")
     public ResponseEntity<List<Product>> getByAuthor(@RequestParam String name) {
         return ResponseEntity.ok(productService.findByAuthorName(name));
     }
@@ -90,7 +90,7 @@ public class ProductController {
     }
 
     // Get products by publisher
-    @GetMapping("/by-publisher")
+    @GetMapping("/byPublisher")
     public ResponseEntity<List<Product>> getByPublisher(@RequestParam String name) {
         return ResponseEntity.ok(productService.findByPublisherName(name));
     }
