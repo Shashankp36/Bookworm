@@ -22,6 +22,8 @@ public interface IOrderService {
 
     // Get orders by user
     List<Order> getOrdersByUser(User user);
+    
+    public List<Order> getOrdersByUserId(int userId);
 
     // Update order status
     boolean updateOrderStatus(int orderId, Order.OrderStatus status);
