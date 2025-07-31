@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import jakarta.servlet.http.HttpSession;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 @RestController
@@ -47,6 +48,7 @@ public class AuthController {
 
         // Create and assign Cart
         Cart cart = new Cart();
+        cart.setCreatedAt(LocalDateTime.now());
         cart.setUser(savedUser);
         cartService.saveCart(cart);
 
