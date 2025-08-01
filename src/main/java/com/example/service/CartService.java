@@ -2,8 +2,8 @@ package com.example.service;
 
 import com.example.model.Cart;
 import com.example.model.CartItem;
+import com.example.model.CartItem.ItemType;
 import com.example.model.Discount;
-import com.example.model.ItemType;
 import com.example.model.User;
 import com.example.repository.CartRepository;
 import org.springframework.beans.factory.annotation.Autowired;

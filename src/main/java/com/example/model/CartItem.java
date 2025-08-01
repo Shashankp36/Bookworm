@@ -22,11 +22,18 @@ public class CartItem {
 	@ManyToOne
 	@JoinColumn(name = "Applied_Discount_ID")
 	private Discount appliedDiscount;
+	
+	public enum ItemType {
+		PURCHASE,
+	    RENT
+	}
 
 	@Enumerated(EnumType.STRING)
 	@Column(name = "Item_Type", nullable = false)
 	private ItemType itemType;
 
+	
+	
 	public CartItem() {
 	}
 
@@ -63,6 +70,7 @@ public class CartItem {
 	public void setAppliedDiscount(Discount appliedDiscount) {
 		this.appliedDiscount = appliedDiscount;
 	}
+	
 
 	public ItemType getItemType() {
 		return itemType;
