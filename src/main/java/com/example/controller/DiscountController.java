@@ -20,6 +20,30 @@ public class DiscountController {
         this.discountService = discountService;
     }
 
+    // 1. Get all discounts (optional: for user display or debugging)
+    @GetMapping
+    public ResponseEntity<List<Discount>> getAllDiscounts() {
+        List<Discount> discounts = discountService.getAllDiscounts();
+        return ResponseEntity.ok(discounts);
+    }
+
+    // 2. Get a discount by ID (used when applying a specific discount to a cart item)
+    @GetMapping("/{id}")
+    public ResponseEntity<Discount> getDiscountById(@PathVariable int id) {
+        Optional<Discount> discount = discountService.getDiscountById(id);
+        return discount.map(ResponseEntity::ok)
+                       .orElse(ResponseEntity.notFound().build());
+    }
+
+    // 3. Get all discounts available for a specific product
+    @GetMapping("/product/{productId}")
+    public ResponseEntity<List<Discount>> getDiscountsByProductId(@PathVariable int productId) {
+        List<Discount> discounts = discountService.getDiscountsByProductId(productId);
+        return ResponseEntity.ok(discounts);
+    }
+
+    //  Admin routes
+    
     // Create a new discount
     @PostMapping
     public ResponseEntity<Discount> createDiscount(@RequestBody Discount discount) {
@@ -27,52 +51,27 @@ public class DiscountController {
         return ResponseEntity.ok(savedDiscount);
     }
 
-    // Get all discounts
-    @GetMapping
-    public ResponseEntity<List<Discount>> getAllDiscounts() {
-        return ResponseEntity.ok(discountService.getAllDiscounts());
+    // Update discount
+    @PutMapping("/{id}")
+    public ResponseEntity<Discount> updateDiscount(@PathVariable int id, @RequestBody Discount updated) {
+        Optional<Discount> existing = discountService.getDiscountById(id);
+        if (existing.isEmpty()) return ResponseEntity.notFound().build();
+
+        Discount discount = existing.get();
+        discount.setDiscountType(updated.getDiscountType());
+        discount.setValue(updated.getValue());
+        discount.setProduct(updated.getProduct());
+        return ResponseEntity.ok(discountService.saveDiscount(discount));
     }
 
-    // Get a discount by ID
-    @GetMapping("/{id}")
-    public ResponseEntity<Discount> getDiscountById(@PathVariable int id) {
-        Optional<Discount> discount = discountService.getDiscountById(id);
-        return discount.map(ResponseEntity::ok)
-                       .orElseGet(() -> ResponseEntity.notFound().build());
-    }
-
-    // Delete a discount by ID
+    // Delete discount
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteDiscount(@PathVariable int id) {
-        Optional<Discount> discount = discountService.getDiscountById(id);
-        if (discount.isPresent()) {
-            discountService.deleteDiscount(id);
-            return ResponseEntity.noContent().build();
-        } else {
+        if (discountService.getDiscountById(id).isEmpty())
             return ResponseEntity.notFound().build();
-        }
-    }
 
-    // Get all discounts by Product ID
-    @GetMapping("/product/{productId}")
-    public ResponseEntity<List<Discount>> getDiscountsByProductId(@PathVariable int productId) {
-        List<Discount> discounts = discountService.getDiscountsByProductId(productId);
-        return ResponseEntity.ok(discounts);
+        discountService.deleteDiscount(id);
+        return ResponseEntity.noContent().build();
     }
-
-    // Update a discount
-    @PutMapping("/{id}")
-    public ResponseEntity<Discount> updateDiscount(@PathVariable int id, @RequestBody Discount discountDetails) {
-        Optional<Discount> optionalDiscount = discountService.getDiscountById(id);
-        if (optionalDiscount.isPresent()) {
-            Discount discount = optionalDiscount.get();
-            discount.setDiscountType(discountDetails.getDiscountType());
-            discount.setValue(discountDetails.getValue());
-            discount.setProduct(discountDetails.getProduct());
-            Discount updatedDiscount = discountService.saveDiscount(discount);
-            return ResponseEntity.ok(updatedDiscount);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
-    }
+    
 }

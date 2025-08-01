@@ -77,6 +77,7 @@ public class OrderController {
             Order order = orderOpt.get();
 
             OrderDetail detail = new OrderDetail();
+
             detail.setOrder(order);
             detail.setProduct(product);
 
@@ -86,6 +87,7 @@ public class OrderController {
 
             detail.setUnitPrice(product.getPrice());
             detail.setSubtotal(product.getPrice()); // since quantity not used
+
 
             return orderDetailService.saveOrUpdateOrderDetail(detail);
         }
