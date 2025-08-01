@@ -23,9 +23,6 @@ public class OrderDetail {
     @Enumerated(EnumType.STRING)
     @Column(name = "Product_Type", nullable = false)
     private ProductType productType;
-//Saakshi
-//    @Column(name = "Quantity", nullable = false)
-//    private int quantity = 1;
 
     @Column(name = "Unit_Price", nullable = false)
     private BigDecimal unitPrice;
@@ -71,14 +68,15 @@ public class OrderDetail {
     public void setProductType(ProductType productType) {
         this.productType = productType;
     }
-//Saakshi
-//    public int getQuantity() {
-//        return quantity;
-//    }
 
-//    public void setQuantity(int quantity) {
-//        this.quantity = quantity;
-//    }
+    // ✅ Custom setter to set enum using a String (format name)
+    public void setProductType(String productType) {
+        try {
+            this.productType = ProductType.valueOf(productType.toLowerCase());
+        } catch (IllegalArgumentException e) {
+            this.productType = null; // or set default like ProductType.ebook if needed
+        }
+    }
 
     public BigDecimal getUnitPrice() {
         return unitPrice;
