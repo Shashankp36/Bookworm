@@ -1,11 +1,15 @@
 package com.example.service;
 
 import com.example.model.Cart;
+import com.example.model.CartItem;
+import com.example.model.Discount;
+import com.example.model.ItemType;
 import com.example.model.User;
 import com.example.repository.CartRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -67,5 +71,49 @@ public void deleteCart(int id) {
 public void deleteCartByUserId(int userId) {
     Optional<Cart> optionalCart = cartRepository.findByUserUserId(userId);
     optionalCart.ifPresent(cart -> cartRepository.deleteById(cart.getCartId()));
+    
 }
+//Saakshi
+//9. Total Cart Amount by cart ID.
+@Override
+public BigDecimal calculateCartTotal(Cart cart) {
+    BigDecimal total = BigDecimal.ZERO;
+
+    for (CartItem item : cart.getCartItems()) {
+        BigDecimal price = item.getProduct().getPrice();
+        Discount discount = item.getAppliedDiscount();
+        BigDecimal finalPrice;
+
+        // Determine base price based on type
+        if (item.getItemType() == ItemType.RENT) {
+            // 20% of full price for 7-day rental
+            finalPrice = price.multiply(BigDecimal.valueOf(0.2));
+        } else {
+            // PURCHASE: start with full price
+            finalPrice = price;
+        }
+
+        // Apply discount only for PURCHASE items (optional rule)
+        if (item.getItemType() == ItemType.PURCHASE && discount != null && discount.getDiscountType() != null) {
+            switch (discount.getDiscountType()) {
+                case flat:
+                    finalPrice = finalPrice.subtract(discount.getValue());
+                    break;
+                case percentage:
+                    BigDecimal discountAmount = finalPrice.multiply(discount.getValue()).divide(BigDecimal.valueOf(100));
+                    finalPrice = finalPrice.subtract(discountAmount);
+                    break;
+            }
+        }
+
+        // No negative totals
+        if (finalPrice.compareTo(BigDecimal.ZERO) < 0)
+            finalPrice = BigDecimal.ZERO;
+
+        total = total.add(finalPrice);
+    }
+
+    return total;
+}
+
 }

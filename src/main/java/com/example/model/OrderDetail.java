@@ -23,9 +23,9 @@ public class OrderDetail {
     @Enumerated(EnumType.STRING)
     @Column(name = "Product_Type", nullable = false)
     private ProductType productType;
-
-    @Column(name = "Quantity", nullable = false)
-    private int quantity = 1;
+//Saakshi
+//    @Column(name = "Quantity", nullable = false)
+//    private int quantity = 1;
 
     @Column(name = "Unit_Price", nullable = false)
     private BigDecimal unitPrice;
@@ -71,14 +71,14 @@ public class OrderDetail {
     public void setProductType(ProductType productType) {
         this.productType = productType;
     }
+//Saakshi
+//    public int getQuantity() {
+//        return quantity;
+//    }
 
-    public int getQuantity() {
-        return quantity;
-    }
-
-    public void setQuantity(int quantity) {
-        this.quantity = quantity;
-    }
+//    public void setQuantity(int quantity) {
+//        this.quantity = quantity;
+//    }
 
     public BigDecimal getUnitPrice() {
         return unitPrice;
