@@ -47,17 +47,17 @@ public class CartItemService implements ICartItemService {
         List<CartItem> items = cartItemRepository.findByCartCartId(cartId);
         cartItemRepository.deleteAll(items);
     }
-
-    @Override
-    public CartItem updateCartItemQuantity(int cartItemId, int newQuantity) {
-        Optional<CartItem> optional = cartItemRepository.findById(cartItemId);
-        if (optional.isPresent()) {
-            CartItem item = optional.get();
-            item.setQuantity(newQuantity);
-            return cartItemRepository.save(item);
-        }
-        return null;
-    }
+//Saakshi - not required
+//    @Override
+//    public CartItem updateCartItemQuantity(int cartItemId, int newQuantity) {
+//        Optional<CartItem> optional = cartItemRepository.findById(cartItemId);
+//        if (optional.isPresent()) {
+//            CartItem item = optional.get();
+//            item.setQuantity(newQuantity);
+//            return cartItemRepository.save(item);
+//        }
+//        return null;
+//    }
 
     @Override
     public CartItem applyDiscountToCartItem(int cartItemId, Discount discount) {
@@ -74,19 +74,17 @@ public class CartItemService implements ICartItemService {
     public Optional<CartItem> findItemByCartAndProduct(int cartId, int productId) {
         return cartItemRepository.findByCartCartIdAndProductProductId(cartId, productId);
     }
-
+// Saakshi - removed quantity
     @Override
-    public CartItem addOrUpdateItem(Cart cart, Product product, int quantity) {
+    public CartItem addOrUpdateItem(Cart cart, Product product) {
         Optional<CartItem> existing = cartItemRepository.findByCartCartIdAndProductProductId(cart.getCartId(), product.getProductId());
         if (existing.isPresent()) {
             CartItem item = existing.get();
-            item.setQuantity(item.getQuantity() + quantity);
             return cartItemRepository.save(item);
         } else {
             CartItem newItem = new CartItem();
             newItem.setCart(cart);
             newItem.setProduct(product);
-            newItem.setQuantity(quantity);
             return cartItemRepository.save(newItem);
         }
     }
