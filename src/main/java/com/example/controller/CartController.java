@@ -2,16 +2,20 @@ package com.example.controller;
 
 import com.example.model.*;
 import com.example.service.*;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
+
 import java.util.List;
 import java.util.Optional;
 
 @RestController
+
 @RequestMapping("/api/carts")
+
 public class CartController {
 
     @Autowired
@@ -21,6 +25,7 @@ public class CartController {
     private ICartItemService cartItemService;
 
     @Autowired
+
     private IUser userService;
 
     @Autowired
@@ -125,3 +130,4 @@ public class CartController {
         return ResponseEntity.ok(cartService.getAllCarts());
     }
 } 
+
