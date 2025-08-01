@@ -4,13 +4,18 @@ import com.example.model.*;
 import com.example.service.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.math.BigDecimal;
 
 import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/cart")
+
+@RequestMapping("/api/carts")
+
 public class CartController {
 
     @Autowired
@@ -20,77 +25,109 @@ public class CartController {
     private ICartItemService cartItemService;
 
     @Autowired
-    private IProduct productService; 
+
+    private IUser userService;
+
+    @Autowired
+    private IProduct productService;
 
     @Autowired
     private IDiscountService discountService;
 
-    @Autowired
-    private IUser userService; 
-
-    // 1. Create Cart for a user
-    @PostMapping("/create/{userId}")
-    public Cart createCart(@PathVariable int userId) {
+    // Ensure cart always exists for user
+    @GetMapping("/user/{userId}/ensure")
+    public ResponseEntity<Cart> ensureCartForUser(@PathVariable int userId) {
         Optional<User> userOpt = userService.getUserById(userId);
-        return userOpt.map(cartService::createCartForUser).orElse(null);
+        if (userOpt.isEmpty()) return ResponseEntity.badRequest().build();
+
+        return cartService.getCartByUserId(userId)
+                .or(() -> Optional.of(cartService.createCartForUser(userOpt.get())))
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.badRequest().build());
     }
 
-    // 2. Get Cart by User ID
+    // Get user's cart
     @GetMapping("/user/{userId}")
-    public Optional<Cart> getCartByUserId(@PathVariable int userId) {
-        return cartService.getCartByUserId(userId);
+    public ResponseEntity<Cart> getCartByUser(@PathVariable int userId) {
+        return cartService.getCartByUserId(userId)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 
-    // 3. Get Cart by Cart ID
-    @GetMapping("/{cartId}")
-    public Optional<Cart> getCartById(@PathVariable int cartId) {
-        return cartService.getCartById(cartId);
+    // Get all items in a cart
+    @GetMapping("/{cartId}/items")
+    public ResponseEntity<List<CartItem>> getCartItems(@PathVariable int cartId) {
+        return ResponseEntity.ok(cartItemService.getItemsByCartId(cartId));
     }
 
-    // 4. Add/Update Item in Cart
-    @PostMapping("/{cartId}/add/{productId}")
-    public CartItem addOrUpdateItem(@PathVariable int cartId,
-                                    @PathVariable int productId,
-                                    @RequestParam int quantity) {
+    // Add item to cart (no quantity since eBooks/audiobooks)
+    @PostMapping("/{cartId}/items")
+    public ResponseEntity<CartItem> addItem(
+            @PathVariable int cartId,
+            @RequestParam int productId
+    ) {
         Optional<Cart> cartOpt = cartService.getCartById(cartId);
         Optional<Product> productOpt = productService.getProductById(productId);
-        if (cartOpt.isPresent() && productOpt.isPresent()) {
-            return cartItemService.addOrUpdateItem(cartOpt.get(), productOpt.get(), quantity);
-        }
-        return null;
+
+        if (cartOpt.isEmpty() || productOpt.isEmpty()) return ResponseEntity.badRequest().build();
+
+        CartItem item = cartItemService.addOrUpdateItem(cartOpt.get(), productOpt.get());
+        return ResponseEntity.ok(item);
     }
 
-    // 5. Get all items in a Cart
-    @GetMapping("/{cartId}/items")
-    public List<CartItem> getCartItems(@PathVariable int cartId) {
-        return cartItemService.getItemsByCartId(cartId);
+    // Remove item from cart by product ID
+    @DeleteMapping("/{cartId}/items/product/{productId}")
+    public ResponseEntity<Void> removeItemByProduct(
+            @PathVariable int cartId,
+            @PathVariable int productId
+    ) {
+        cartItemService.deleteCartItem(productId);
+        return ResponseEntity.noContent().build();
     }
 
-    // 6. Update quantity of a CartItem
-    @PutMapping("/item/{cartItemId}/quantity")
-    public CartItem updateCartItemQuantity(@PathVariable int cartItemId,
-                                           @RequestParam int quantity) {
-        return cartItemService.updateCartItemQuantity(cartItemId, quantity);
-    }
-
-    // 7. Apply Discount to CartItem
-    @PutMapping("/item/{cartItemId}/discount/{discountId}")
-    public CartItem applyDiscount(@PathVariable int cartItemId,
-                                  @PathVariable int discountId) {
+    // Apply discount
+    @PutMapping("/items/{itemId}/discount")
+    public ResponseEntity<CartItem> applyDiscount(
+            @PathVariable int itemId,
+            @RequestParam int discountId
+    ) {
         Optional<Discount> discountOpt = discountService.getDiscountById(discountId);
-        return discountOpt.map(discount -> cartItemService.applyDiscountToCartItem(cartItemId, discount)).orElse(null);
+        if (discountOpt.isEmpty()) return ResponseEntity.badRequest().build();
+
+        CartItem item = cartItemService.applyDiscountToCartItem(itemId, discountOpt.get());
+        if (item == null) return ResponseEntity.notFound().build();
+        return ResponseEntity.ok(item);
     }
 
-    // 8. Remove CartItem
-    @DeleteMapping("/item/{cartItemId}")
-    public void removeCartItem(@PathVariable int cartItemId) {
-        cartItemService.deleteCartItem(cartItemId);
-    }
-
-    // 9. Clear all items in a cart
+    // Clear cart (typically after checkout/transaction)
     @DeleteMapping("/{cartId}/clear")
-    public void clearCart(@PathVariable int cartId) {
+    public ResponseEntity<Void> clearCart(@PathVariable int cartId) {
         cartItemService.clearCart(cartId);
+        return ResponseEntity.noContent().build();
     }
 
-}
+    // Get total amount of the cart
+    @GetMapping("/{cartId}/total")
+    public ResponseEntity<BigDecimal> getCartTotal(@PathVariable int cartId) {
+        Optional<Cart> cartOpt = cartService.getCartById(cartId);
+        if (cartOpt.isEmpty()) return ResponseEntity.notFound().build();
+
+        BigDecimal total = cartService.calculateCartTotal(cartOpt.get());
+        return ResponseEntity.ok(total);
+    }
+
+    // Checkout endpoint (can be integrated with payment)
+    @PostMapping("/{cartId}/checkout")
+    public ResponseEntity<String> checkoutCart(@PathVariable int cartId) {
+        // Placeholder for payment/checkout logic
+        cartItemService.clearCart(cartId);  // After transaction, clear cart
+        return ResponseEntity.ok("Checkout complete. Cart cleared.");
+    }
+
+    // List all carts (admin/debug)
+    @GetMapping("/all")
+    public ResponseEntity<List<Cart>> getAllCarts() {
+        return ResponseEntity.ok(cartService.getAllCarts());
+    }
+} 
+

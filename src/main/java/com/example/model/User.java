@@ -3,6 +3,8 @@ package com.example.model;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 @Entity
 @Table(name = "Users")
 public class User {
@@ -38,6 +40,7 @@ public class User {
 
     // One-to-one with Shelf
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY, optional = false)
+    @JsonBackReference
     private Shelf shelf;
 
     // Getters and Setters

@@ -1,5 +1,7 @@
 package com.example.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import jakarta.persistence.*;
 
 @Entity
@@ -13,6 +15,7 @@ public class ShelfItem {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "Shelf_ID", nullable = false)
+    @JsonBackReference
     private Shelf shelf;
 
     @ManyToOne(fetch = FetchType.LAZY)
