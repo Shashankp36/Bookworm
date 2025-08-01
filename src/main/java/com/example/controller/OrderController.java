@@ -77,7 +77,6 @@ public class OrderController {
             OrderDetail detail = new OrderDetail();
             detail.setOrder(orderOpt.get());
             detail.setProduct(productOpt.get());
-            detail.setQuantity(quantity);
             return orderDetailService.saveOrUpdateOrderDetail(detail);
         }
         return null;
