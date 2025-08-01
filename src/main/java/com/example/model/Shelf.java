@@ -1,5 +1,7 @@
 package com.example.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import jakarta.persistence.*;
 
 @Entity
@@ -13,6 +15,7 @@ public class Shelf {
 
     @OneToOne
     @JoinColumn(name = "User_ID", nullable = false, unique = true)
+    @JsonManagedReference
     private User user;
 
     // Getters and Setters
