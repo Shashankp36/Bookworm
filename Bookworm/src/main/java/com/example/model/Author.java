@@ -10,7 +10,7 @@ public class Author {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int authorId;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private String authorName;
 
     private String bio;
