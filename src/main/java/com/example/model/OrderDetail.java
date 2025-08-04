@@ -69,6 +69,7 @@ public class OrderDetail {
         this.productType = productType;
     }
 
+
     // ✅ Custom setter to set enum using a String (format name)
     public void setProductType(String productType) {
         try {
@@ -77,6 +78,7 @@ public class OrderDetail {
             this.productType = null; // or set default like ProductType.ebook if needed
         }
     }
+
 
     public BigDecimal getUnitPrice() {
         return unitPrice;

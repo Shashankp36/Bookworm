@@ -14,7 +14,7 @@ import java.util.Optional;
 
 @RestController
 
-@RequestMapping("/api/carts")
+@RequestMapping("/api/cart")
 
 public class CartController {
 
