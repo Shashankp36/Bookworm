@@ -49,7 +49,7 @@ public class AuthController {
 
     // ---------- SIGN UP ----------
     @PostMapping("/signup")
-    public ResponseEntity<String> signup(@RequestBody User user , HttpSession session) {
+    public ResponseEntity<String> signup(@RequestBody User user) {
         if (userService.existsByEmail(user.getUserEmail())) {
             return ResponseEntity.badRequest().body("Email already exists");
         }
@@ -78,14 +78,14 @@ public class AuthController {
         cart.setUser(savedUser);
         cartService.saveCart(cart);
         
-        session.setAttribute("user", savedUser);
+       
         
         return ResponseEntity.ok("User registered successfully with shelf and cart");
     }
 
     // ---------- LOGIN ----------
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody UserLoginDTO request) {
+    public ResponseEntity<?> login(@RequestBody UserLoginDTO request,HttpSession session) {
         Optional<User> userOpt = userService.getUserByEmail(request.getEmail());
 
         if (userOpt.isEmpty()) {
@@ -102,7 +102,7 @@ public class AuthController {
         // Generate tokens
         String accessToken = jwtUtil.generateToken(user.getUserEmail(), user.getRole().name());
         String refreshToken = jwtUtil.generateRefreshToken(user.getUserEmail());
-
+        session.setAttribute("user", user);
         return ResponseEntity.ok().body(Map.of(
             "message", "Login successful",
             "accessToken", accessToken,
