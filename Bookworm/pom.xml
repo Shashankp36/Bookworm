@@ -56,6 +56,13 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+		<!--Saakshi- added dependency for payment gateway integration-->
+		<dependency>
+		    <groupId>com.razorpay</groupId>
+		    <artifactId>razorpay-java</artifactId>
+		    <version>1.4.3</version>
+		</dependency>
+
 		
 	</dependencies>
 
