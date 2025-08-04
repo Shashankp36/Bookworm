@@ -15,6 +15,7 @@ import java.util.Optional;
 @RestController
 
 @RequestMapping("/api/cart")
+
 public class CartController {
 
     @Autowired
@@ -30,10 +31,8 @@ public class CartController {
     @Autowired
     private IProduct productService;
 
-
     @Autowired
     private IDiscountService discountService;
-
 
     // Ensure cart always exists for user
     @GetMapping("/user/{userId}/ensure")

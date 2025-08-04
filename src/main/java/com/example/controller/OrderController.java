@@ -25,38 +25,38 @@ public class OrderController {
     @Autowired
     private IProduct productService;
 
-    // 1. Create or update an order
+    // 1. Create or update an Order
     @PostMapping
     public Order createOrUpdateOrder(@RequestBody Order order) {
         return orderService.saveOrder(order);
     }
 
-    // 2. Get all orders
+    // 2. Get all Orders
     @GetMapping
     public List<Order> getAllOrders() {
         return orderService.getAllOrders();
     }
 
-    // 3. Get order by ID
+    // 3. Get Order by ID
     @GetMapping("/{orderId}")
     public Optional<Order> getOrderById(@PathVariable int orderId) {
         return orderService.getOrderById(orderId);
     }
 
-    // 4. Get orders by user ID
+    // 4. Get all Orders by User ID
     @GetMapping("/user/{userId}")
     public List<Order> getOrdersByUser(@PathVariable int userId) {
         Optional<User> userOpt = userService.getUserById(userId);
         return userOpt.map(orderService::getOrdersByUser).orElse(null);
     }
 
-    // 5. Delete order by ID
+    // 5. Delete Order by ID
     @DeleteMapping("/{orderId}")
     public void deleteOrder(@PathVariable int orderId) {
         orderService.deleteOrder(orderId);
     }
 
-    // 6. Update order status
+    // 6. Update Order Status
     @PutMapping("/{orderId}/status")
     public boolean updateOrderStatus(@PathVariable int orderId,
                                      @RequestParam Order.OrderStatus status) {
@@ -68,19 +68,35 @@ public class OrderController {
     // 7. Create or update an OrderDetail
     @PostMapping("/{orderId}/details")
     public OrderDetail addOrderDetail(@PathVariable int orderId,
-                                      @RequestParam int productId,
-                                      @RequestParam int quantity) {
+                                      @RequestParam int productId) {
         Optional<Order> orderOpt = orderService.getOrderById(orderId);
         Optional<Product> productOpt = productService.getProductById(productId);
 
         if (orderOpt.isPresent() && productOpt.isPresent()) {
+            Product product = productOpt.get();
+            Order order = orderOpt.get();
+
             OrderDetail detail = new OrderDetail();
-            detail.setOrder(orderOpt.get());
-            detail.setProduct(productOpt.get());
+
+
+            detail.setOrder(order);
+            detail.setProduct(product);
+
+            // ✅ Set productType from associated format
+            String formatName = (product.getFormat() != null) ? product.getFormat().getFormatName() : "Unknown";
+            detail.setProductType(formatName);
+
+            detail.setUnitPrice(product.getPrice());
+            detail.setSubtotal(product.getPrice()); // since quantity not used
+
+
+
             return orderDetailService.saveOrUpdateOrderDetail(detail);
         }
+
         return null;
     }
+
 
     // 8. Get all OrderDetails
     @GetMapping("/details")
@@ -94,7 +110,7 @@ public class OrderController {
         return orderDetailService.getOrderDetailById(detailId);
     }
 
-    // 10. Get OrderDetails for a specific Order
+    // 10. Get OrderDetails for specific Order ID
     @GetMapping("/{orderId}/details")
     public List<OrderDetail> getOrderDetailsByOrder(@PathVariable int orderId) {
         Optional<Order> orderOpt = orderService.getOrderById(orderId);
