@@ -1,11 +1,14 @@
+
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import HomePage from './pages/HomePage';
 import Login from './pages/Login'; // move your login component here
 import Navbar from './components/Navbar'; 
 
+
 function App() {
   return (
+
     <Router>
        <Navbar/>
       <Routes>
@@ -14,6 +17,7 @@ function App() {
       </Routes>
     </Router>
   );
+
 }
 
 export default App;

@@ -3,7 +3,7 @@ package com.example.model;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 @Table(name = "Users")
@@ -39,9 +39,18 @@ public class User {
     private LocalDateTime joinDate = LocalDateTime.now();
 
     // One-to-one with Shelf
+    @JsonManagedReference
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY, optional = false)
-    @JsonBackReference
     private Shelf shelf;
+
+    public enum Role {
+        USER,
+        ADMIN
+    }
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "Role", nullable = false)
+    private Role role = Role.USER;
 
     // Getters and Setters
 
@@ -124,4 +133,25 @@ public class User {
     public void setShelf(Shelf shelf) {
         this.shelf = shelf;
     }
+
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
+    }
 }
+
+
+
+//{
+//	  "userName": "Vaibhav Dhaygude",
+//	  "userEmail": "vaibhav@example.com",
+//	  "userPhone": "9876543210",
+//	  "userAddress": "Pune, Maharashtra, India",
+//	  "userPassword": "securePassword123",
+//	  "isAdmin": false,
+//	  "isActive": true,
+//	  "role": "USER"
+//	}
