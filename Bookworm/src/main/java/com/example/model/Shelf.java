@@ -1,5 +1,6 @@
 package com.example.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.*;
@@ -13,10 +14,11 @@ public class Shelf {
     @Column(name = "Shelf_ID")
     private Integer shelfId;
 
-    @OneToOne
-    @JoinColumn(name = "User_ID", nullable = false, unique = true)
-    @JsonManagedReference
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    @JsonBackReference
     private User user;
+
 
     // Getters and Setters
 

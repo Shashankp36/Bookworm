@@ -1,6 +1,8 @@
 package com.example.model;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.Cascade;
+
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 
@@ -10,47 +12,62 @@ public class Product {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "Product_ID")
     private int productId;
 
+    @Column(nullable = false)
     private String title;
+
     private String description;
 
-    @ManyToOne
-    @JoinColumn(name = "Format_ID")
-    private Format format;
-
-    @Column(unique = true)
+    @Column(unique = true, nullable = false)
     private String isbn;
 
+    @Column(nullable = false)
     private BigDecimal price;
 
     @ManyToOne
-    @JoinColumn(name = "Language_ID")
-    private Language language;
-
-    @ManyToOne
-    @JoinColumn(name = "Genre_ID")
-    private Genre genre;
-
-    @ManyToOne
-    @JoinColumn(name = "Author_ID")
+    @JoinColumn(name = "Author_ID", nullable = false)
+    @Cascade(org.hibernate.annotations.CascadeType.PERSIST)
     private Author author;
 
     @ManyToOne
-    @JoinColumn(name = "Publisher_ID")
+    @JoinColumn(name = "Publisher_ID", nullable = false)
+    @Cascade(org.hibernate.annotations.CascadeType.PERSIST)
     private Publisher publisher;
 
+    @ManyToOne
+    @JoinColumn(name = "Language_ID", nullable = false)
+    @Cascade(org.hibernate.annotations.CascadeType.PERSIST)
+    private Language language;
+
+    @ManyToOne
+    @JoinColumn(name = "Format_ID", nullable = false)
+    @Cascade(org.hibernate.annotations.CascadeType.PERSIST)
+    private Format format;
+
+    @ManyToOne
+    @JoinColumn(name = "Genre_ID", nullable = false)
+    @Cascade(org.hibernate.annotations.CascadeType.PERSIST)
+    private Genre genre;
+
+    @Column(name = "Royalty_Author", nullable = false)
     private BigDecimal royaltyAuthor;
+
+    @Column(name = "Royalty_Publisher", nullable = false)
     private BigDecimal royaltyPublisher;
 
+    @Column(name = "Product_Url")
     private String productUrl;
+
+    @Column(name = "Cover_Url")
     private String coverUrl;
 
+    @Column(name = "Available")
     private Boolean available;
-    
+
     @Column(name = "Is_Active")
     private Boolean isActive = true;
-
 
     @Column(name = "Created_At", insertable = false, updatable = false)
     private Timestamp createdAt;
@@ -81,22 +98,6 @@ public class Product {
         this.description = description;
     }
 
-    public Format getFormat() {
-        return format;
-    }
-
-    public Boolean getIsActive() {
-		return isActive;
-	}
-
-	public void setIsActive(Boolean isActive) {
-		this.isActive = isActive;
-	}
-
-	public void setFormat(Format format) {
-        this.format = format;
-    }
-
     public String getIsbn() {
         return isbn;
     }
@@ -113,22 +114,6 @@ public class Product {
         this.price = price;
     }
 
-    public Language getLanguage() {
-        return language;
-    }
-
-    public void setLanguage(Language language) {
-        this.language = language;
-    }
-
-    public Genre getGenre() {
-        return genre;
-    }
-
-    public void setGenre(Genre genre) {
-        this.genre = genre;
-    }
-
     public Author getAuthor() {
         return author;
     }
@@ -143,6 +128,30 @@ public class Product {
 
     public void setPublisher(Publisher publisher) {
         this.publisher = publisher;
+    }
+
+    public Language getLanguage() {
+        return language;
+    }
+
+    public void setLanguage(Language language) {
+        this.language = language;
+    }
+
+    public Format getFormat() {
+        return format;
+    }
+
+    public void setFormat(Format format) {
+        this.format = format;
+    }
+
+    public Genre getGenre() {
+        return genre;
+    }
+
+    public void setGenre(Genre genre) {
+        this.genre = genre;
     }
 
     public BigDecimal getRoyaltyAuthor() {
@@ -183,6 +192,14 @@ public class Product {
 
     public void setAvailable(Boolean available) {
         this.available = available;
+    }
+
+    public Boolean getIsActive() {
+        return isActive;
+    }
+
+    public void setIsActive(Boolean isActive) {
+        this.isActive = isActive;
     }
 
     public Timestamp getCreatedAt() {

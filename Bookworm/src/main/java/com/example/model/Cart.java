@@ -1,61 +1,66 @@
 package com.example.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
+import org.hibernate.annotations.CreationTimestamp;
+
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
 @Table(name = "Carts")
 public class Cart {
-	
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "Cart_ID")
-	private int cartId;
 
-	@OneToOne
-	@JoinColumn(name = "User_ID", unique = true, nullable = false)
-	private User user;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "Cart_ID")
+    private int cartId;
 
-	@Column(name = "Created_At", nullable = false)
-	private LocalDateTime createdAt;
+    @OneToOne
+    @JoinColumn(name = "User_ID", unique = true, nullable = false)
+    private User user;
 
-	@OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, orphanRemoval = true)
-	private List<CartItem> cartItems;
+    @Column(name = "Created_At", nullable = false, updatable = false)
+    @CreationTimestamp
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    private LocalDateTime createdAt;
 
-	public Cart() {}
+    @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<CartItem> cartItems;
 
-	// Getters and Setters
+    public Cart() {}
 
-	public int getCartId() {
-	    return cartId;
-	}
+    // Getters and Setters
 
-	public void setCartId(int cartId) {
-	    this.cartId = cartId;
-	}
+    public int getCartId() {
+        return cartId;
+    }
 
-	public User getUser() {
-	    return user;
-	}
+    public void setCartId(int cartId) {
+        this.cartId = cartId;
+    }
 
-	public void setUser(User user) {
-	    this.user = user;
-	}
+    public User getUser() {
+        return user;
+    }
 
-	public LocalDateTime getCreatedAt() {
-	    return createdAt;
-	}
+    public void setUser(User user) {
+        this.user = user;
+    }
 
-	public void setCreatedAt(LocalDateTime createdAt) {
-	    this.createdAt = createdAt;
-	}
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
 
-	public List<CartItem> getCartItems() {
-	    return cartItems;
-	}
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
 
-	public void setCartItems(List<CartItem> cartItems) {
-	    this.cartItems = cartItems;
-	}
+    public List<CartItem> getCartItems() {
+        return cartItems;
+    }
+
+    public void setCartItems(List<CartItem> cartItems) {
+        this.cartItems = cartItems;
+    }
 }
