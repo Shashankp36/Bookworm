@@ -8,6 +8,9 @@ import com.example.model.Product;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.stereotype.Service;
+
+
 public interface ICartItemService {
 
     CartItem saveCartItem(CartItem cartItem);  // Add or Save
@@ -18,7 +21,7 @@ public interface ICartItemService {
 
     List<CartItem> getItemsByCartId(int cartId);
 
-    void deleteCartItem(int id);
+    void deleteCartItem(int productId, int cartId);
 
     void clearCart(int cartId);
 

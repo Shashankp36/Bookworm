@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -62,4 +63,19 @@ public class RentalService implements IRentalService {
     public void deleteRental(int id) {
         rentalRepository.deleteById(id);
     }
+
+    @Override
+    public void checkExpiry(User user) {
+        List<Rental> rentals = this.getRentalsByUser(user);
+        LocalDate currDate = LocalDate.now();
+        
+        for (Rental rental : rentals) {
+            if (currDate.isAfter(rental.getRentalEnd())) {
+                this.deleteRental(rental.getRentalId());
+                System.out.println("Rental expired: " + rental.getRentalId());
+                rentalRepository.save(rental);
+            }
+        }
+    }
+
 }

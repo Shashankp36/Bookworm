@@ -16,4 +16,5 @@ public interface IRentalService {
     List<Rental> getRentalsByUser(User user);
     List<Rental> getRentalsByProduct(Product product);
     List<Rental> getActiveRentals();
+	void checkExpiry(User user);
 }

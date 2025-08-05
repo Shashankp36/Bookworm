@@ -7,15 +7,20 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
+import com.example.configuration.SessionUserProvider;
 import com.example.model.Shelf;
 import com.example.model.ShelfItem;
 import com.example.model.User;
 import com.example.service.IShelf;
 import com.example.service.IShelfItemService;
-
-import jakarta.servlet.http.HttpSession;
 
 @RestController
 @RequestMapping("/api/shelf")
@@ -25,6 +30,8 @@ public class ShelfController {
     private final IShelfItemService shelfItemService;
 
     @Autowired
+    SessionUserProvider provider;
+    
     public ShelfController(IShelf shelfService, IShelfItemService shelfItemService) {
         this.shelfService = shelfService;
         this.shelfItemService = shelfItemService;
@@ -38,8 +45,9 @@ public class ShelfController {
     }
 
     // ---------- Get shelf by ID (optional) ----------
-    @GetMapping("/{shelfId}")
-    public ResponseEntity<Shelf> getShelfById(@PathVariable int shelfId) {
+    @GetMapping
+    public ResponseEntity<Shelf> getShelfById() {
+    	int shelfId = provider.getCurrentUser().get().getShelf().getShelfId();
         return shelfService.getShelfById(shelfId)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
@@ -58,11 +66,11 @@ public class ShelfController {
         shelfItemService.deleteShelfItem(itemId);
         return ResponseEntity.ok("Shelf item deleted");
     }
-
+    
     // ---------- Get logged-in user's shelf with purchased & rented items ----------
     @GetMapping("/my-shelf")
-    public ResponseEntity<?> getUserShelf(HttpSession session) {
-        User user = (User) session.getAttribute("user");
+    public ResponseEntity<?> getUserShelf() {
+        User user = provider.getCurrentUser().get();
 
         if (user == null) {
             return ResponseEntity.status(401).body("User not logged in");

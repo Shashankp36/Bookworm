@@ -1,5 +1,6 @@
 package com.example.controller;
 
+import com.example.configuration.SessionUserProvider;
 import com.example.model.*;
 import com.example.service.*;
 
@@ -13,7 +14,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/cart")
+@RequestMapping("/api/cart/")
 public class CartController {
 
     @Autowired
@@ -23,7 +24,6 @@ public class CartController {
     private ICartItemService cartItemService;
 
     @Autowired
-
     private IUser userService;
 
     @Autowired
@@ -31,10 +31,15 @@ public class CartController {
 
     @Autowired
     private IDiscountService discountService;
+    
+    @Autowired
+    private SessionUserProvider provider;
 
+    
     // Ensure cart always exists for user
-    @GetMapping("/user/{userId}/ensure")
-    public ResponseEntity<Cart> ensureCartForUser(@PathVariable int userId) {
+    @GetMapping("/user/ensure")
+    public ResponseEntity<Cart> ensureCartForUser() {
+    	int userId  = provider.getCurrentUser().get().getUserId();
         Optional<User> userOpt = userService.getUserById(userId);
         if (userOpt.isEmpty()) return ResponseEntity.badRequest().build();
 
@@ -45,26 +50,30 @@ public class CartController {
     }
 
     // Get user's cart
-    @GetMapping("/user/{userId}")
-    public ResponseEntity<Cart> getCartByUser(@PathVariable int userId) {
+    @GetMapping("/user")
+    public ResponseEntity<Cart> getCartByUser() {
+    	int userId  = provider.getCurrentUser().get().getUserId();
         return cartService.getCartByUserId(userId)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
     // Get all items in a cart
-    @GetMapping("/{cartId}/items")
-    public ResponseEntity<List<CartItem>> getCartItems(@PathVariable int cartId) {
-        return ResponseEntity.ok(cartItemService.getItemsByCartId(cartId));
+    @GetMapping("/items")
+    public ResponseEntity<List<CartItem>> getCartItems() {
+    	int userId = provider.getCurrentUser().get().getUserId();
+    	Cart cart  = cartService.getCartByUserId(userId).get();
+    	System.out.println(cart);
+        return ResponseEntity.ok(cartItemService.getItemsByCartId(cart.getCartId()));
     }
 
     // Add item to cart (no quantity since eBooks/audiobooks)
-    @PostMapping("/{cartId}/items")
+    @PostMapping("/items")
     public ResponseEntity<CartItem> addItem(
-            @PathVariable int cartId,
             @RequestParam int productId
     ) {
-        Optional<Cart> cartOpt = cartService.getCartById(cartId);
+    	int userId = provider.getCurrentUser().get().getUserId();
+    	Optional<Cart> cartOpt  = cartService.getCartByUserId(userId);
         Optional<Product> productOpt = productService.getProductById(productId);
 
         if (cartOpt.isEmpty() || productOpt.isEmpty()) return ResponseEntity.badRequest().build();
@@ -74,57 +83,63 @@ public class CartController {
     }
 
     // Remove item from cart by product ID
-    @DeleteMapping("/{cartId}/items/product/{productId}")
+    @DeleteMapping("/items/product/{productId}")
     public ResponseEntity<Void> removeItemByProduct(
-            @PathVariable int cartId,
             @PathVariable int productId
     ) {
-        cartItemService.deleteCartItem(productId);
+    	  int userId = provider.getCurrentUser().get().getUserId();
+    	  Cart cart = cartService.getCartByUserId(userId).get();
+    	     cartItemService.deleteCartItem(productId , cart.getCartId());
         return ResponseEntity.noContent().build();
     }
 
-    // Apply discount
-    @PutMapping("/items/{itemId}/discount")
-    public ResponseEntity<CartItem> applyDiscount(
-            @PathVariable int itemId,
-            @RequestParam int discountId
-    ) {
-        Optional<Discount> discountOpt = discountService.getDiscountById(discountId);
-        if (discountOpt.isEmpty()) return ResponseEntity.badRequest().build();
-
-        CartItem item = cartItemService.applyDiscountToCartItem(itemId, discountOpt.get());
-        if (item == null) return ResponseEntity.notFound().build();
-        return ResponseEntity.ok(item);
-    }
+//    // Apply discount
+//    @PutMapping("/items/discount")
+//    public ResponseEntity<CartItem> applyDiscount(
+//            @RequestParam int discountId
+//    ) {
+//        Optional<Discount> discountOpt = discountService.getDiscountById(discountId);
+//        if (discountOpt.isEmpty()) return ResponseEntity.badRequest().build();
+//
+//        CartItem item = cartItemService.applyDiscountToCartItem(itemId, discountOpt.get());
+//        if (item == null) return ResponseEntity.notFound().build();
+//        return ResponseEntity.ok(item);
+//    }
 
     // Clear cart (typically after checkout/transaction)
-    @DeleteMapping("/{cartId}/clear")
-    public ResponseEntity<Void> clearCart(@PathVariable int cartId) {
-        cartItemService.clearCart(cartId);
+    @DeleteMapping("/clear")
+    public ResponseEntity<Void> clearCart() {
+    	int userId = provider.getCurrentUser().get().getUserId();
+  	  Cart cart = cartService.getCartByUserId(userId).get();
+        cartItemService.clearCart(cart.getCartId());
         return ResponseEntity.noContent().build();
     }
 
     // Get total amount of the cart
-    @GetMapping("/{cartId}/total")
-    public ResponseEntity<BigDecimal> getCartTotal(@PathVariable int cartId) {
-        Optional<Cart> cartOpt = cartService.getCartById(cartId);
+    @GetMapping("/total")
+    public ResponseEntity<BigDecimal> getCartTotal() {
+    	int userId = provider.getCurrentUser().get().getUserId();
+  	   Cart cart = cartService.getCartByUserId(userId).get();
+        Optional<Cart> cartOpt = cartService.getCartById(cart.getCartId());
         if (cartOpt.isEmpty()) return ResponseEntity.notFound().build();
-
         BigDecimal total = cartService.calculateCartTotal(cartOpt.get());
         return ResponseEntity.ok(total);
     }
 
     // Checkout endpoint (can be integrated with payment)
-    @PostMapping("/{cartId}/checkout")
-    public ResponseEntity<String> checkoutCart(@PathVariable int cartId) {
+    @PostMapping("/checkout")
+    public ResponseEntity<String> checkoutCart() {
+    	int userId = provider.getCurrentUser().get().getUserId();
+  	    Cart cart = cartService.getCartByUserId(userId).get();
         // Placeholder for payment/checkout logic
-        cartItemService.clearCart(cartId);  // After transaction, clear cart
+        cartItemService.clearCart(cart.getCartId());  // After transaction, clear cart
         return ResponseEntity.ok("Checkout complete. Cart cleared.");
     }
 
     // List all carts (admin/debug)
     @GetMapping("/all")
     public ResponseEntity<List<Cart>> getAllCarts() {
+    	System.out.println(provider.getCurrentUser());
         return ResponseEntity.ok(cartService.getAllCarts());
     }
 } 
