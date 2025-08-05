@@ -1,5 +1,6 @@
 package com.example.service;
 
+import com.example.model.CartItem;
 import com.example.model.Order;
 import com.example.model.OrderDetail;
 import com.example.model.Product;
@@ -55,4 +56,21 @@ public List<OrderDetail> getOrderDetailsByProduct(Product product) {
 public void deleteOrderDetailById(int id) {
     orderDetailRepository.deleteById(id);
 }
+@Override
+public void saveOrderDetails(Order order, List<CartItem> items) {
+    for (CartItem item : items) {
+        OrderDetail detail = new OrderDetail();
+        detail.setOrder(order);
+        detail.setProduct(item.getProduct());
+        detail.setUnitPrice(item.getProduct().getPrice());
+        detail.setProductType(
+            item.getProduct().getFormat() != null ?
+            item.getProduct().getFormat().getFormatName() :
+            "Unknown"
+        );
+        detail.setSubtotal(item.getProduct().getPrice()); // no quantity used
+        orderDetailRepository.save(detail);
+    }
+}
+
 }

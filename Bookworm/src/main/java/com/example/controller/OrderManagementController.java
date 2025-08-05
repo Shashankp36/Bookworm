@@ -3,6 +3,7 @@ package com.example.controller;
 import com.example.model.*;
 import com.example.service.*;
 
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -11,19 +12,12 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/orders")
-public class OrderController {
+public class OrderManagementController {
 
-    @Autowired
-    private IOrderService orderService;
-
-    @Autowired
-    private IOrderDetailService orderDetailService;
-
-    @Autowired
-    private IUser userService;
-
-    @Autowired
-    private IProduct productService;
+    @Autowired private IOrderService orderService;
+    @Autowired private IOrderDetailService orderDetailService;
+    @Autowired private IUser userService;
+    @Autowired private IProduct productService;
 
     // 1. Create or update an Order
     @PostMapping
@@ -31,26 +25,33 @@ public class OrderController {
         return orderService.saveOrder(order);
     }
 
-    // 2. Get all Orders
+    // 2. Get all Orders (Admin use)
     @GetMapping
     public List<Order> getAllOrders() {
         return orderService.getAllOrders();
     }
 
-    // 3. Get Order by ID
+    // 3. Get Order by ID (checks user ownership)
     @GetMapping("/{orderId}")
-    public Optional<Order> getOrderById(@PathVariable int orderId) {
-        return orderService.getOrderById(orderId);
+    public Order getOrderById(@PathVariable int orderId, HttpSession session) {
+        int userId = (int) session.getAttribute("userId");
+        Optional<Order> orderOpt = orderService.getOrderById(orderId);
+
+        if (orderOpt.isPresent() && orderOpt.get().getUser().getUserId() == userId) {
+            return orderOpt.get();
+        }
+        throw new RuntimeException("Unauthorized or order not found.");
     }
 
-    // 4. Get all Orders by User ID
-    @GetMapping("/user/{userId}")
-    public List<Order> getOrdersByUser(@PathVariable int userId) {
+    // 4. Get Orders for current logged-in user
+    @GetMapping("/user")
+    public List<Order> getOrdersForLoggedInUser(HttpSession session) {
+        int userId = (int) session.getAttribute("userId");
         Optional<User> userOpt = userService.getUserById(userId);
-        return userOpt.map(orderService::getOrdersByUser).orElse(null);
+        return userOpt.map(orderService::getOrdersByUser).orElseThrow(() -> new RuntimeException("User not found"));
     }
 
-    // 5. Delete Order by ID
+    // 5. Delete Order by ID (admin or internal use)
     @DeleteMapping("/{orderId}")
     public void deleteOrder(@PathVariable int orderId) {
         orderService.deleteOrder(orderId);
@@ -65,7 +66,7 @@ public class OrderController {
 
     // ───────────── OrderDetail Section ─────────────
 
-    // 7. Create or update an OrderDetail
+    // 7. Add OrderDetail to Order (used internally)
     @PostMapping("/{orderId}/details")
     public OrderDetail addOrderDetail(@PathVariable int orderId,
                                       @RequestParam int productId) {
@@ -73,23 +74,17 @@ public class OrderController {
         Optional<Product> productOpt = productService.getProductById(productId);
 
         if (orderOpt.isPresent() && productOpt.isPresent()) {
-            Product product = productOpt.get();
             Order order = orderOpt.get();
+            Product product = productOpt.get();
 
             OrderDetail detail = new OrderDetail();
-
-
             detail.setOrder(order);
             detail.setProduct(product);
 
-            // ✅ Set productType from associated format
             String formatName = (product.getFormat() != null) ? product.getFormat().getFormatName() : "Unknown";
             detail.setProductType(formatName);
-
             detail.setUnitPrice(product.getPrice());
-            detail.setSubtotal(product.getPrice()); // since quantity not used
-
-
+            detail.setSubtotal(product.getPrice());
 
             return orderDetailService.saveOrUpdateOrderDetail(detail);
         }
@@ -97,29 +92,47 @@ public class OrderController {
         return null;
     }
 
-
-    // 8. Get all OrderDetails
+    // 8. Get all OrderDetails (admin or debugging use)
     @GetMapping("/details")
     public List<OrderDetail> getAllOrderDetails() {
         return orderDetailService.getAllOrderDetails();
     }
 
-    // 9. Get OrderDetail by ID
+    // 9. Get OrderDetail by ID (internal)
     @GetMapping("/details/{detailId}")
     public Optional<OrderDetail> getOrderDetailById(@PathVariable int detailId) {
         return orderDetailService.getOrderDetailById(detailId);
     }
 
-    // 10. Get OrderDetails for specific Order ID
+    // 10. Get OrderDetails by Order ID (checks if order belongs to logged-in user)
     @GetMapping("/{orderId}/details")
-    public List<OrderDetail> getOrderDetailsByOrder(@PathVariable int orderId) {
+    public List<OrderDetail> getOrderDetailsByOrder(@PathVariable int orderId, HttpSession session) {
+        int userId = (int) session.getAttribute("userId");
+
         Optional<Order> orderOpt = orderService.getOrderById(orderId);
-        return orderOpt.map(orderDetailService::getOrderDetailsByOrder).orElse(null);
+        if (orderOpt.isPresent() && orderOpt.get().getUser().getUserId() == userId) {
+            return orderDetailService.getOrderDetailsByOrder(orderOpt.get());
+        }
+
+        throw new RuntimeException("Unauthorized or order not found.");
     }
 
-    // 11. Delete OrderDetail by ID
+    // 11. Delete OrderDetail by ID (internal)
     @DeleteMapping("/details/{detailId}")
     public void deleteOrderDetail(@PathVariable int detailId) {
         orderDetailService.deleteOrderDetailById(detailId);
+    }
+
+    // 12. Get Order Status for specific order
+    @GetMapping("/{orderId}/status")
+    public String getOrderStatus(@PathVariable int orderId, HttpSession session) {
+        int userId = (int) session.getAttribute("userId");
+
+        Optional<Order> orderOpt = orderService.getOrderById(orderId);
+        if (orderOpt.isPresent() && orderOpt.get().getUser().getUserId() == userId) {
+            return orderOpt.get().getOrderStatus().name();
+        }
+
+        throw new RuntimeException("Unauthorized or order not found.");
     }
 }

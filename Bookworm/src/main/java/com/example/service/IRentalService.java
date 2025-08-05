@@ -1,6 +1,8 @@
 package com.example.service;
 
 import com.example.model.Rental;
+import com.example.model.CartItem;
+import com.example.model.Order;
 import com.example.model.Product;
 import com.example.model.User;
 
@@ -16,4 +18,5 @@ public interface IRentalService {
     List<Rental> getRentalsByUser(User user);
     List<Rental> getRentalsByProduct(Product product);
     List<Rental> getActiveRentals();
+	Rental save(Order order, CartItem item);
 }

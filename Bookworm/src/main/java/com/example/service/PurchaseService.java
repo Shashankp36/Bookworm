@@ -1,5 +1,7 @@
 package com.example.service;
 
+import com.example.model.CartItem;
+import com.example.model.Order;
 import com.example.model.Purchase;
 import com.example.model.Purchase.RoyaltyType;
 import com.example.repository.PurchaseRepository;
@@ -76,4 +78,26 @@ public class PurchaseService implements IPurchaseService {
     public long countPurchasesByUser(int userId) {
         return purchaseRepository.countByUserUserId(userId);
     }
+    @Override
+    public Purchase save(Order order, CartItem item) {
+        Purchase purchase = new Purchase();
+        purchase.setOrder(order);
+        purchase.setUser(order.getUser()); // Set the user from order
+        purchase.setProduct(item.getProduct());
+
+        // Set price paid
+        purchase.setPricePaid(item.getProduct().getPrice());
+
+        // Dummy royalty logic (replace later with real logic)
+        purchase.setAuthorRoyalty(item.getProduct().getPrice().multiply(java.math.BigDecimal.valueOf(0.10)));
+        purchase.setPublisherRoyalty(item.getProduct().getPrice().multiply(java.math.BigDecimal.valueOf(0.05)));
+        purchase.setRoyaltyType(RoyaltyType.percentage);
+
+        // Set date
+        purchase.setPurchaseDate(LocalDateTime.now());
+
+        return purchaseRepository.save(purchase);
+    }
+
+
 }

@@ -115,5 +115,16 @@ public BigDecimal calculateCartTotal(Cart cart) {
 
     return total;
 }
+@Override
+public void clearCart(Cart cart) {
+    cart.getCartItems().clear();
+    cartRepository.save(cart);
+}
+@Override
+public Cart getCartEntityByUserId(int userId) {
+    return cartRepository.findByUserUserId(userId)
+            .orElseThrow(() -> new RuntimeException("❌ Cart not found for user ID: " + userId));
+}
+
 
 }
