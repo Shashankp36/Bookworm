@@ -1,23 +1,22 @@
-
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import HomePage from './pages/HomePage';
-import Login from './pages/Login'; // move your login component here
-import Navbar from './components/Navbar'; 
-
+import Login from './pages/Login';
+import Navbar from './components/Navbar';
+import { AuthProvider } from './contexts/AuthContext';
 
 function App() {
   return (
-
-    <Router>
-       <Navbar/>
-      <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/auth" element={<Login />} />
-      </Routes>
-    </Router>
+    <AuthProvider>
+      <Router>
+        <Navbar />
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/auth" element={<Login />} />
+        </Routes>
+      </Router>
+    </AuthProvider>
   );
-
 }
 
 export default App;
