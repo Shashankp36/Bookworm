@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,6 +25,7 @@ import com.example.service.IShelf;
 import com.example.service.IUser;
 import com.example.service.ShelfService;
 import com.example.service.UserService;
+
 
 @RestController
 @RequestMapping("/api/auth")
@@ -48,8 +50,10 @@ public class AuthController {
 
     // ---------- SIGN UP ----------
     @PostMapping("/signup")
+
     // Removed HttpSession from method signature
     public ResponseEntity<String> signup(@RequestBody User user) { 
+
         if (userService.existsByEmail(user.getUserEmail())) {
             return ResponseEntity.badRequest().body("Email already exists");
         }
@@ -71,15 +75,16 @@ public class AuthController {
         Cart cart = new Cart();
         cart.setUser(savedUser);
         cartService.saveCart(cart);
-        
+
         // Removed session.setAttribute()
+
         
         return ResponseEntity.ok("User registered successfully with shelf and cart");
     }
 
     // ---------- LOGIN ----------
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody UserLoginDTO request) {
+    public ResponseEntity<?> login(@RequestBody UserLoginDTO request,HttpSession session) {
         Optional<User> userOpt = userService.getUserByEmail(request.getEmail());
 
         if (userOpt.isEmpty()) {
@@ -94,7 +99,7 @@ public class AuthController {
 
         String accessToken = jwtUtil.generateToken(user.getUserEmail(), user.getRole().name());
         String refreshToken = jwtUtil.generateRefreshToken(user.getUserEmail());
-
+        session.setAttribute("user", user);
         return ResponseEntity.ok().body(Map.of(
             "message", "Login successful",
             "accessToken", accessToken,
