@@ -15,6 +15,7 @@ public class Purchase {
 
 	@ManyToOne
 	@JoinColumn(name = "User_ID", nullable = false)
+	
 	private User user;
 
 	@ManyToOne

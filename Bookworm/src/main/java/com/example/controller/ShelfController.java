@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.configuration.SessionUserProvider;
+import com.example.dto.ShelfItemDTO;
 import com.example.model.Shelf;
 import com.example.model.ShelfItem;
 import com.example.model.User;
@@ -68,27 +70,63 @@ public class ShelfController {
     }
     
     // ---------- Get logged-in user's shelf with purchased & rented items ----------
-    @GetMapping("/my-shelf")
+//    @GetMapping("/myshelf")
+//    public ResponseEntity<?> getUserShelf() {
+//        User user = provider.getCurrentUser().get();
+//
+//        if (user == null) {
+//            return ResponseEntity.status(401).body("User not logged in");
+//        }
+//
+//        Optional<Shelf> shelfOpt = shelfService.getShelfByUserId(user.getUserId());
+//        if (shelfOpt.isEmpty()) {
+//            return ResponseEntity.status(404).body("Shelf not found");
+//        }
+//
+//        int shelfId = shelfOpt.get().getShelfId();
+//        List<ShelfItem> purchasedItems = shelfItemService.getPurchasedItemsByShelfId(shelfId);
+//        List<ShelfItem> rentedItems = shelfItemService.getRentedItemsByShelfId(shelfId);
+//
+//        Map<String, Object> response = new HashMap<>();
+//        response.put("purchasedItems", purchasedItems);
+//        response.put("rentedItems", rentedItems);
+//
+//        return ResponseEntity.ok(response);
+//    }
+    
+    @GetMapping("/myshelf")
     public ResponseEntity<?> getUserShelf() {
-        User user = provider.getCurrentUser().get();
+        Optional<User> optionalUser = provider.getCurrentUser();
 
-        if (user == null) {
+        if (optionalUser.isEmpty()) {
             return ResponseEntity.status(401).body("User not logged in");
         }
 
+        User user = optionalUser.get();
         Optional<Shelf> shelfOpt = shelfService.getShelfByUserId(user.getUserId());
+
         if (shelfOpt.isEmpty()) {
             return ResponseEntity.status(404).body("Shelf not found");
         }
 
-        int shelfId = shelfOpt.get().getShelfId();
-        List<ShelfItem> purchasedItems = shelfItemService.getPurchasedItemsByShelfId(shelfId);
-        List<ShelfItem> rentedItems = shelfItemService.getRentedItemsByShelfId(shelfId);
+        Shelf shelf = shelfOpt.get();
+
+        List<ShelfItem> purchasedItems = shelfItemService.getPurchasedItemsByShelfId(shelf.getShelfId());
+        List<ShelfItem> rentedItems = shelfItemService.getRentedItemsByShelfId(shelf.getShelfId());
+
+        List<ShelfItemDTO> purchasedDTOs = purchasedItems.stream()
+            .map(ShelfItemDTO::new)
+            .collect(Collectors.toList());
+
+        List<ShelfItemDTO> rentedDTOs = rentedItems.stream()
+            .map(ShelfItemDTO::new)
+            .collect(Collectors.toList());
 
         Map<String, Object> response = new HashMap<>();
-        response.put("purchasedItems", purchasedItems);
-        response.put("rentedItems", rentedItems);
+        response.put("purchasedItems", purchasedDTOs);
+        response.put("rentedItems", rentedDTOs);
 
         return ResponseEntity.ok(response);
     }
+
 }
