@@ -1,11 +1,16 @@
 package com.example.service;
 
+import com.example.model.Order;
 import com.example.model.Transaction;
 import com.example.model.Transaction.PaymentStatus;
+import com.example.model.User;
 import com.example.repository.TransactionRepository;
+import com.example.repository.UserRepository;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -14,10 +19,13 @@ import java.util.Optional;
 public class TransactionService implements ITransactionService {
 
     private final TransactionRepository transactionRepository;
+    private final UserRepository userRepository;
 
     @Autowired
-    public TransactionService(TransactionRepository transactionRepository) {
+    public TransactionService(TransactionRepository transactionRepository,
+                              UserRepository userRepository) {
         this.transactionRepository = transactionRepository;
+        this.userRepository = userRepository;
     }
 
     @Override
@@ -61,5 +69,28 @@ public class TransactionService implements ITransactionService {
     @Override
     public List<Transaction> getTransactionsByDateRange(LocalDateTime from, LocalDateTime to) {
         return transactionRepository.findByPaymentDateBetween(from, to);
+    }
+
+    @Override
+    public Transaction createTransaction(int userId, Order order, BigDecimal amount,
+                                         String paymentMode, boolean success) {
+        Transaction txn = new Transaction();
+
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found with ID: " + userId));
+        txn.setUser(user);
+
+        txn.setOrder(order); // may be null initially
+        txn.setAmount(amount);
+        txn.setPaymentMode(paymentMode);
+        txn.setPaymentStatus(success ? PaymentStatus.success : PaymentStatus.failed);
+        txn.setPaymentDate(LocalDateTime.now());
+
+        return transactionRepository.save(txn);
+    }
+
+    @Override
+    public void updateTransactionOrder(Transaction txn) {
+        transactionRepository.save(txn);
     }
 }
