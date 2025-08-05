@@ -26,6 +26,8 @@ import com.example.service.IUser;
 import com.example.service.ShelfService;
 import com.example.service.UserService;
 
+import jakarta.servlet.http.HttpSession;
+
 
 @RestController
 @RequestMapping("/api/auth")
@@ -84,7 +86,7 @@ public class AuthController {
 
     // ---------- LOGIN ----------
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody UserLoginDTO request) {
+    public ResponseEntity<?> login(@RequestBody UserLoginDTO request,HttpSession session) {
         Optional<User> userOpt = userService.getUserByEmail(request.getEmail());
 
         if (userOpt.isEmpty()) {
@@ -99,7 +101,7 @@ public class AuthController {
 
         String accessToken = jwtUtil.generateToken(user.getUserEmail(), user.getRole().name());
         String refreshToken = jwtUtil.generateRefreshToken(user.getUserEmail());
-     //   session.setAttribute("user", user);
+        session.setAttribute("user", user);
         return ResponseEntity.ok().body(Map.of(
             "message", "Login successful",
             "accessToken", accessToken,
