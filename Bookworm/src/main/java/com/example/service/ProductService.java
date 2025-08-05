@@ -1,8 +1,17 @@
 package com.example.service;
 
 import com.example.model.Product;
+import com.example.model.Format;
+import com.example.model.Language;
+import com.example.model.Genre;
+import com.example.model.Author;
+import com.example.model.Publisher;
 import com.example.repository.ProductRepository;
-import com.example.service.ProductService;
+import com.example.repository.FormatRepository;
+import com.example.repository.LanguageRepository;
+import com.example.repository.GenreRepository;
+import com.example.repository.AuthorRepository;
+import com.example.repository.PublisherRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -17,13 +26,55 @@ import java.util.stream.*;
 public class ProductService implements IProduct {
 
     private final ProductRepository productRepository;
+    private final FormatRepository formatRepository;
+    private final LanguageRepository languageRepository;
+    private final GenreRepository genreRepository;
+    private final AuthorRepository authorRepository;
+    private final PublisherRepository publisherRepository;
 
     @Autowired
-    public ProductService(ProductRepository productRepository) {
+    public ProductService(ProductRepository productRepository,
+                         FormatRepository formatRepository,
+                         LanguageRepository languageRepository,
+                         GenreRepository genreRepository,
+                         AuthorRepository authorRepository,
+                         PublisherRepository publisherRepository) {
         this.productRepository = productRepository;
+        this.formatRepository = formatRepository;
+        this.languageRepository = languageRepository;
+        this.genreRepository = genreRepository;
+        this.authorRepository = authorRepository;
+        this.publisherRepository = publisherRepository;
     }
 
     public Product saveProduct(Product product) {
+        // Fetch and set managed entities for all references
+    	System.out.println("Saving product: " + product);
+        if (product.getFormat() != null && product.getFormat().getFormatId() != 0) {
+            Format format = formatRepository.findById(product.getFormat().getFormatId())
+                    .orElseThrow(() -> new IllegalArgumentException("Invalid format ID"));
+            product.setFormat(format);
+        }
+        if (product.getLanguage() != null && product.getLanguage().getLanguageId() != 0) {
+            Language language = languageRepository.findById(product.getLanguage().getLanguageId())
+                    .orElseThrow(() -> new IllegalArgumentException("Invalid language ID"));
+            product.setLanguage(language);
+        }
+        if (product.getGenre() != null && product.getGenre().getGenreId() != 0) {
+            Genre genre = genreRepository.findById(product.getGenre().getGenreId())
+                    .orElseThrow(() -> new IllegalArgumentException("Invalid genre ID"));
+            product.setGenre(genre);
+        }
+        if (product.getAuthor() != null && product.getAuthor().getAuthorId() != 0) {
+            Author author = authorRepository.findById(product.getAuthor().getAuthorId())
+                    .orElseThrow(() -> new IllegalArgumentException("Invalid author ID"));
+            product.setAuthor(author);
+        }
+        if (product.getPublisher() != null && product.getPublisher().getPublisherId() != 0) {
+            Publisher publisher = publisherRepository.findById(product.getPublisher().getPublisherId())
+                    .orElseThrow(() -> new IllegalArgumentException("Invalid publisher ID"));
+            product.setPublisher(publisher);
+        }
         return productRepository.save(product);
     }
 
