@@ -11,7 +11,11 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+
+import java.util.Date;
+
 import java.time.LocalDateTime;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -66,6 +70,23 @@ public class RentalService implements IRentalService {
     public void deleteRental(int id) {
         rentalRepository.deleteById(id);
     }
+
+
+    @Override
+    public void checkExpiry(User user) {
+        List<Rental> rentals = this.getRentalsByUser(user);
+        LocalDate currDate = LocalDate.now();
+        
+        for (Rental rental : rentals) {
+            if (currDate.isAfter(rental.getRentalEnd())) {
+                this.deleteRental(rental.getRentalId());
+                System.out.println("Rental expired: " + rental.getRentalId());
+                rentalRepository.save(rental);
+            }
+        }
+    }
+
+
     // 8. Save rental from order + cart item
     @Override
     public Rental save(Order order, CartItem item) {
@@ -93,4 +114,5 @@ public class RentalService implements IRentalService {
 
         return rentalRepository.save(rental);
     }
+
 }

@@ -38,8 +38,8 @@ public class CartItemService implements ICartItemService {
     }
 
     @Override
-    public void deleteCartItem(int cartItemId) {
-        cartItemRepository.deleteById(cartItemId);
+    public void deleteCartItem(int productId , int cartId) {
+        cartItemRepository.deleteByCartIdAndProductId(productId,cartId);
     }
 
     @Override
