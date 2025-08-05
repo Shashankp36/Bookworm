@@ -1,5 +1,7 @@
 package com.example.service;
 
+import com.example.model.CartItem;
+import com.example.model.Order;
 import com.example.model.Purchase;
 import com.example.model.Purchase.RoyaltyType;
 
@@ -18,4 +20,5 @@ public interface IPurchaseService {
     List<Purchase> getPurchasesBetweenDates(LocalDateTime start, LocalDateTime end);
     List<Purchase> getPurchasesByRoyaltyType(RoyaltyType royaltyType);
     long countPurchasesByUser(int userId);
+    Purchase save(Order order, CartItem item);
 }

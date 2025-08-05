@@ -22,4 +22,7 @@ void deleteCartByUserId(int userId);
 
 // Saakshi - adding cart total method
 BigDecimal calculateCartTotal(Cart cart);
+//shashank-to delete cart after order placement
+void clearCart(Cart cart);
+Cart getCartEntityByUserId(int userId);
 }

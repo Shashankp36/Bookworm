@@ -3,6 +3,7 @@ package com.example.service;
 import com.example.model.Order;
 import com.example.model.User;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,4 +28,6 @@ public interface IOrderService {
 
     // Update order status
     boolean updateOrderStatus(int orderId, Order.OrderStatus status);
+
+	Order createOrder(int userId, BigDecimal amount);
 }

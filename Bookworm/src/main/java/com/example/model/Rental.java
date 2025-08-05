@@ -23,7 +23,7 @@ private User user;
 private Product product;
 
 @Column(name = "Rental_Start", nullable = false)
-private LocalDateTime rentalStart;
+private LocalDate rentalStart;
 
 @Column(name = "Rental_End", nullable = false)
 private LocalDate rentalEnd;
@@ -46,6 +46,18 @@ public enum RoyaltyType {
     percentage,
     fixed
 }
+@ManyToOne
+@JoinColumn(name = "Order_ID")
+private Order order;
+
+public Order getOrder() {
+    return order;
+}
+
+public void setOrder(Order order) {
+    this.order = order;
+}
+
 
 // Getters and Setters
 
@@ -73,12 +85,12 @@ public void setProduct(Product product) {
     this.product = product;
 }
 
-public LocalDateTime getRentalStart() {
+public LocalDate getRentalStart() {
     return rentalStart;
 }
 
-public void setRentalStart(LocalDateTime rentalStart) {
-    this.rentalStart = rentalStart;
+public void setRentalStart(LocalDate startDate) {
+    this.rentalStart = startDate;
 }
 
 public LocalDate getRentalEnd() {

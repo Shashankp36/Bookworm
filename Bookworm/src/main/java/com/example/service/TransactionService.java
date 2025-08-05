@@ -80,7 +80,12 @@ public class TransactionService implements ITransactionService {
                 .orElseThrow(() -> new RuntimeException("User not found with ID: " + userId));
         txn.setUser(user);
 
-        txn.setOrder(order); // may be null initially
+        if (success && order != null) {
+            txn.setOrder(order);
+        } else {
+            txn.setOrder(null); // no order reference on failure
+        }
+
         txn.setAmount(amount);
         txn.setPaymentMode(paymentMode);
         txn.setPaymentStatus(success ? PaymentStatus.success : PaymentStatus.failed);
@@ -88,6 +93,7 @@ public class TransactionService implements ITransactionService {
 
         return transactionRepository.save(txn);
     }
+
 
     @Override
     public void updateTransactionOrder(Transaction txn) {
