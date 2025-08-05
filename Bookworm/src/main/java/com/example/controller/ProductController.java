@@ -1,27 +1,36 @@
 package com.example.controller;
 
-import com.example.model.Product;
-import com.example.service.IProduct;
-import com.example.service.ProductService;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.*;
+import com.example.model.Product;
+import com.example.service.IProduct;
 
 @RestController
-@RequestMapping("/api/products")
+@RequestMapping("/api/products/")
 public class ProductController {
 
     private final IProduct productService;
 
     @Autowired
-    public ProductController(ProductService productService) {
+    public ProductController(IProduct productService) {
         this.productService = productService;
     }
+
 
     // Get all products
     @GetMapping
@@ -37,12 +46,16 @@ public class ProductController {
                       .orElse(ResponseEntity.notFound().build());
     }
 
-    // Create product
+    // Create productss
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
     public Product createProduct(@RequestBody Product product) {
+    	System.out.println("Creating product: " + product);
+    	
         return productService.saveProduct(product);
     }
+    
+    
 
     // Update product
     @PutMapping("/{id}")

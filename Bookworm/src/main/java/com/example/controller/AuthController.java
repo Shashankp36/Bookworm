@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -23,8 +24,6 @@ import com.example.service.IShelf;
 import com.example.service.IUser;
 import com.example.service.ShelfService;
 import com.example.service.UserService;
-
-import jakarta.servlet.http.HttpSession;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -49,7 +48,8 @@ public class AuthController {
 
     // ---------- SIGN UP ----------
     @PostMapping("/signup")
-    public ResponseEntity<String> signup(@RequestBody User user , HttpSession session) {
+    // Removed HttpSession from method signature
+    public ResponseEntity<String> signup(@RequestBody User user) { 
         if (userService.existsByEmail(user.getUserEmail())) {
             return ResponseEntity.badRequest().body("Email already exists");
         }
@@ -57,28 +57,22 @@ public class AuthController {
             return ResponseEntity.badRequest().body("Phone already exists");
         }
 
-        // Set default role if not provided
         if (user.getRole() == null) {
             user.setRole(User.Role.USER);
         }
 
-        // Encode password before saving
         user.setUserPassword(passwordEncoder.encode(user.getUserPassword()));
-
-        // Save user
         User savedUser = userService.createUser(user);
 
-        // Create and associate shelf
         Shelf shelf = new Shelf();
         shelf.setUser(savedUser);
         shelfService.createOrUpdateShelf(shelf);
 
-        // Create and associate cart
         Cart cart = new Cart();
         cart.setUser(savedUser);
         cartService.saveCart(cart);
         
-        session.setAttribute("user", savedUser);
+        // Removed session.setAttribute()
         
         return ResponseEntity.ok("User registered successfully with shelf and cart");
     }
@@ -94,12 +88,10 @@ public class AuthController {
 
         User user = userOpt.get();
 
-        // Validate password
         if (!passwordEncoder.matches(request.getPassword(), user.getUserPassword())) {
             return ResponseEntity.status(401).body("Invalid email or password");
         }
 
-        // Generate tokens
         String accessToken = jwtUtil.generateToken(user.getUserEmail(), user.getRole().name());
         String refreshToken = jwtUtil.generateRefreshToken(user.getUserEmail());
 
@@ -134,10 +126,15 @@ public class AuthController {
         ));
     }
 
-    // ---------- LOGOUT ----------
+    // ---------- LOGOUT (CONCEPTUAL) ----------
+    // In a stateless JWT system, true logout is handled client-side by deleting the token.
+    // A server-side endpoint might be used to blacklist the token if needed, but session.invalidate() is incorrect.
     @PostMapping("/logout")
-    public ResponseEntity<String> logout(HttpSession session) {
-        session.invalidate(); // Ends the user session
-        return ResponseEntity.ok("Logout successful. Session invalidated.");
+    public ResponseEntity<String> logout() {
+        // The client is responsible for deleting the JWT.
+        // The server cannot "invalidate" a JWT without a blacklist mechanism.
+        // This endpoint can simply acknowledge the client's action.
+        SecurityContextHolder.clearContext(); // Clear security context for the current thread
+        return ResponseEntity.ok("Logout successful. Please delete your token on the client-side.");
     }
 }
