@@ -6,7 +6,6 @@ const Login = () => {
   const navigate = useNavigate();
   const { loginUser } = useAuth();
 
-  
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -64,19 +63,12 @@ const Login = () => {
         const result = await res.text();
         console.log(result);
 
-       if (res.ok) {
-  const parsedResult = JSON.parse(result);
+        if (res.ok) {
 
-  // Save tokens to localStorage
-  localStorage.setItem("accessToken", parsedResult.accessToken);
-  localStorage.setItem("refreshToken", parsedResult.refreshToken);
-  localStorage.setItem("role", parsedResult.role);
-  localStorage.setItem("loginTime", Date.now()); // optional for tracking
-
-  alert("Logged in successfully!");
-  loginUser(); // this sets isLoggedIn = true in AuthContext
-  navigate("/");
-}
+          alert("Logged in successfully!");
+          loginUser();
+          navigate("/");
+        }
         else {
           alert("Invalid Email or Password");
         }
@@ -88,46 +80,46 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen w-screen flex items-center justify-center bg-gray-300 text-white px-4">
-      <div className="relative w-[900px] h-[650px] bg-gray-800 rounded-2xl overflow-hidden shadow-2xl">
+    <div className="min-h-screen w-screen flex items-center justify-center bg-gray-900 text-white px-4">
+      <div className="relative w-[768px] h-[500px] bg-gray-800 rounded-2xl overflow-hidden shadow-2xl">
         {/* Form content */}
         <div
           className={`absolute top-0 w-1/2 h-full flex flex-col items-center justify-center px-10 transition-all duration-700 ease-in-out ${isRegistering ? "right-0" : "left-0"
             }`}
         >
-          <h2 className="text-2xl font-bold mb-10">
+          <h2 className="text-2xl font-bold mb-6">
             {isRegistering ? "Register" : "Login"}
           </h2>
 
-          <form className="w-82" onSubmit={handleSubmit}>
+          <form className="w-72" onSubmit={handleSubmit}>
             {isRegistering && (
               <>
                 <input
                   type="text"
                   name="fullName"
                   placeholder="Full Name"
-                  className="input mb-4"
+                  className="input mb-2"
                   required
                 />
                 <input
                   type="email"
                   name="email"
                   placeholder="Email"
-                  className="input mb-4"
+                  className="input mb-2"
                   required
                 />
                 <input
                   type="text"
                   name="phone"
                   placeholder="Phone"
-                  className="input mb-4"
+                  className="input mb-2"
                   required
                 />
                 <input
                   type="text"
                   name="address"
                   placeholder="Address"
-                  className="input mb-4"
+                  className="input mb-2"
                   required
                 />
               </>
@@ -138,7 +130,7 @@ const Login = () => {
                 type="email"
                 name="email"
                 placeholder="Email"
-                className="input mb-4"
+                className="input mb-2"
                 required
               />
             )}
@@ -147,7 +139,7 @@ const Login = () => {
               type="password"
               name="password"
               placeholder="Password"
-              className="input mb-4"
+              className="input mb-2"
               required
             />
 
@@ -156,7 +148,7 @@ const Login = () => {
                 type="password"
                 name="confirmPassword"
                 placeholder="Confirm Password"
-                className="input mb-6"
+                className="input mb-4"
                 required
               />
             )}
@@ -164,16 +156,16 @@ const Login = () => {
             {!isRegistering && (
               <div className="flex justify-between text-sm mb-4">
                 <label className="flex items-center">
-                  <input type="checkbox" className="mr-4" />
+                  <input type="checkbox" className="mr-2" />
                   Remember Me
                 </label>
-                <a href="#" className="text-white-400 hover:underline">
+                <a href="#" className="text-indigo-400 hover:underline">
                   Forgot?
                 </a>
               </div>
             )}
 
-            <button type="submit" className="btn w-full mb-8">
+            <button type="submit" className="btn w-full">
               {isRegistering ? "Register" : "Login"}
             </button>
           </form>
@@ -181,11 +173,11 @@ const Login = () => {
 
         {/* Sliding panel */}
         <div
-          className={`absolute top-0 w-1/2 h-full bg-[#B7BBC7] text-black flex flex-col justify-center items-center px-10 transition-all duration-700 ease-in-out z-10 rounded-2xl ${isRegistering ? "left-0" : "right-0"
+          className={`absolute top-0 w-1/2 h-full bg-indigo-600 text-white flex flex-col justify-center items-center px-10 transition-all duration-700 ease-in-out z-10 rounded-2xl ${isRegistering ? "left-0" : "right-0"
             }`}
         >
           <div className="text-center max-w-[240px]">
-            <h2 className="text-3xl font-bold mb-2">
+            <h2 className="text-2xl font-bold mb-2">
               {isRegistering ? "Welcome Back!" : "New here?"}
             </h2>
             <p className="text-sm mb-4">
@@ -195,7 +187,7 @@ const Login = () => {
             </p>
             <button
               onClick={() => setIsRegistering(!isRegistering)}
-              className="bg-white text-indigo-600 font-semibold px-6 py-2 rounded-xl  shadow hover:bg-gray-100 transition"
+              className="bg-white text-indigo-600 font-semibold px-6 py-2 rounded shadow hover:bg-gray-100 transition"
             >
               {isRegistering ? "Login" : "Register"}
             </button>
