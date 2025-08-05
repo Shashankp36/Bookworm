@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,12 +18,8 @@ import com.example.model.Cart;
 import com.example.model.Shelf;
 import com.example.model.User;
 import com.example.security.JwtUtil;
-import com.example.service.CartService;
-import com.example.service.ICartService;
-import com.example.service.IShelf;
-import com.example.service.IUser;
-import com.example.service.ShelfService;
-import com.example.service.UserService;
+import com.example.service.*;
+import jakarta.servlet.http.HttpSession;
 
 import jakarta.servlet.http.HttpSession;
 
@@ -32,6 +27,8 @@ import jakarta.servlet.http.HttpSession;
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
+
+    private final RentalService rentalService_1;
 
     private final IUser userService;
     private final IShelf shelfService;
@@ -42,12 +39,16 @@ public class AuthController {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+    
+    @Autowired
+    private IRentalService rentalService;
 
     @Autowired
-    public AuthController(UserService userService, ShelfService shelfService, CartService cartService) {
+    public AuthController(UserService userService, ShelfService shelfService, CartService cartService, RentalService rentalService_1) {
         this.userService = userService;
         this.shelfService = shelfService;
         this.cartService = cartService;
+        this.rentalService_1 = rentalService_1;
     }
 
     // ---------- SIGN UP ----------
@@ -86,7 +87,10 @@ public class AuthController {
 
     // ---------- LOGIN ----------
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody UserLoginDTO request,HttpSession session) {
+
+
+    public ResponseEntity<?> login(@RequestBody UserLoginDTO request ,HttpSession session) {
+
         Optional<User> userOpt = userService.getUserByEmail(request.getEmail());
 
         if (userOpt.isEmpty()) {
@@ -102,6 +106,9 @@ public class AuthController {
         String accessToken = jwtUtil.generateToken(user.getUserEmail(), user.getRole().name());
         String refreshToken = jwtUtil.generateRefreshToken(user.getUserEmail());
         session.setAttribute("user", user);
+
+        rentalService.checkExpiry(user);
+
         return ResponseEntity.ok().body(Map.of(
             "message", "Login successful",
             "accessToken", accessToken,
@@ -133,6 +140,7 @@ public class AuthController {
         ));
     }
 
+    
     // ---------- LOGOUT (CONCEPTUAL) ----------
     // In a stateless JWT system, true logout is handled client-side by deleting the token.
     // A server-side endpoint might be used to blacklist the token if needed, but session.invalidate() is incorrect.

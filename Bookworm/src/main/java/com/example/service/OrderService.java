@@ -6,6 +6,8 @@ import com.example.repository.OrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -63,5 +65,16 @@ public class OrderService implements IOrderService {
             return true;
         }
         return false;
+    }
+    @Override
+    public Order createOrder(int userId, BigDecimal amount) {
+        Order order = new Order();
+        User user = new User();
+        user.setUserId(userId); // assume existing user
+        order.setUser(user);
+        order.setTotalAmount(amount);
+        order.setOrderDate(LocalDateTime.now());
+        order.setOrderStatus(Order.OrderStatus.pending);
+        return orderRepository.save(order);
     }
 }
