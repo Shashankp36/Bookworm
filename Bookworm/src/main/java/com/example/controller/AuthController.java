@@ -84,7 +84,7 @@ public class AuthController {
 
     // ---------- LOGIN ----------
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody UserLoginDTO request,HttpSession session) {
+    public ResponseEntity<?> login(@RequestBody UserLoginDTO request) {
         Optional<User> userOpt = userService.getUserByEmail(request.getEmail());
 
         if (userOpt.isEmpty()) {
@@ -99,7 +99,7 @@ public class AuthController {
 
         String accessToken = jwtUtil.generateToken(user.getUserEmail(), user.getRole().name());
         String refreshToken = jwtUtil.generateRefreshToken(user.getUserEmail());
-        session.setAttribute("user", user);
+     //   session.setAttribute("user", user);
         return ResponseEntity.ok().body(Map.of(
             "message", "Login successful",
             "accessToken", accessToken,

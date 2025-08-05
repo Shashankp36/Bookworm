@@ -29,7 +29,7 @@ const Navbar = () => {
       <h1 className="text-xl font-bold text-white">📚 BookWorm</h1>
       <div className="space-x-6 text-gray-300 flex items-center">
         <Link to="/" className="hover:text-white">Home</Link>
-        <Link to="/books" className="hover:text-white">Books</Link>
+        <Link to="/products" className="hover:text-white">Books</Link>
         <Link to="/audiobooks" className="hover:text-white">Audiobooks</Link>
         <Link to="/contact" className="hover:text-white">Contact</Link>
 
