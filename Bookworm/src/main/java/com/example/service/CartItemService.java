@@ -1,15 +1,17 @@
 package com.example.service;
 
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.example.dto.AddCartItemRequest;
 import com.example.model.Cart;
 import com.example.model.CartItem;
 import com.example.model.Discount;
 import com.example.model.Product;
 import com.example.repository.CartItemRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.Optional;
 
 @Service
 public class CartItemService implements ICartItemService {
@@ -76,14 +78,18 @@ public class CartItemService implements ICartItemService {
     }
 // Saakshi - removed quantity
     @Override
-    public CartItem addOrUpdateItem(Cart cart, Product product) {
+    public CartItem addOrUpdateItem(Cart cart,AddCartItemRequest cartItemRequest, Product product) {
         Optional<CartItem> existing = cartItemRepository.findByCartCartIdAndProductProductId(cart.getCartId(), product.getProductId());
         if (existing.isPresent()) {
             CartItem item = existing.get();
+            item.setDays(cartItemRequest.getDays());
+            item.setItemType(cartItemRequest.getItemType());
             return cartItemRepository.save(item);
         } else {
             CartItem newItem = new CartItem();
             newItem.setCart(cart);
+            newItem.setDays(cartItemRequest.getDays());
+            newItem.setItemType(cartItemRequest.getItemType());
             newItem.setProduct(product);
             return cartItemRepository.save(newItem);
         }

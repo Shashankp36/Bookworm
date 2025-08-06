@@ -1,5 +1,6 @@
 package com.example.controller;
 
+import com.example.configuration.SessionUserProvider;
 import com.example.model.*;
 import com.example.security.JwtUtil;
 import com.example.service.*;
@@ -23,13 +24,14 @@ public class OrdersController {
     @Autowired private RoyaltyPaymentService royaltyPaymentService;
     @Autowired private CartService cartService;
     @Autowired private JwtUtil jwtUtil;
+    @Autowired private SessionUserProvider provider;
+    @Autowired private IRoyaltyPaymentService royaltyService;
 
     @PostMapping("/pay")
-    public ResponseEntity<String> placeOrder(HttpServletRequest request,
-                                             @RequestParam BigDecimal amount,
-                                             @RequestParam String paymentMode) {
+    public ResponseEntity<String> placeOrder(  @RequestParam BigDecimal amount,
+    		@RequestParam String paymentMode) {
         // ✅ Get userId from session
-        int userId = (int) request.getSession().getAttribute("userId");
+        int userId = provider.getCurrentUser().get().getUserId();
 
         // ✅ Proceed like your service
         Order order = orderService.createOrder(userId, amount);
@@ -42,12 +44,14 @@ public class OrdersController {
         for (CartItem item : items) {
             if (item.getItemType() == CartItem.ItemType.PURCHASE) {
                 purchaseService.save(order, item);
+                
             } else {
                 rentalService.save(order, item);
             }
         }
+        
 
-        //royaltyPaymentService.generate(order, items);
+//        royaltyPaymentService.generate(order, items);
         cartService.clearCart(cart);
 
         return ResponseEntity.ok("✅ Order placed successfully. Transaction ID: " + txn.getTransactionId());

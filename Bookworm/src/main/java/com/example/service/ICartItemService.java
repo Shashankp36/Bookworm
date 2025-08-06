@@ -1,5 +1,6 @@
 package com.example.service;
 
+import com.example.dto.AddCartItemRequest;
 import com.example.model.Cart;
 import com.example.model.CartItem;
 import com.example.model.Discount;
@@ -33,5 +34,5 @@ public interface ICartItemService {
     
     //Saakshi- removed int quantity from addorUpdateItem
 
-    CartItem addOrUpdateItem(Cart cart, Product product);
+	CartItem addOrUpdateItem(Cart cart, AddCartItemRequest cartItemRequest, Product product);
 }

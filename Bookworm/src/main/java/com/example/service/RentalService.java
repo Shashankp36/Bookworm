@@ -1,10 +1,14 @@
 package com.example.service;
 
 import com.example.model.Rental;
+import com.example.model.Shelf;
+import com.example.model.ShelfItem;
 import com.example.model.CartItem;
 import com.example.model.Order;
 import com.example.model.Product;
+import com.example.model.Purchase;
 import com.example.model.User;
+import com.example.model.ShelfItem.AccessType;
 import com.example.repository.RentalRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,6 +27,10 @@ import java.util.Optional;
 public class RentalService implements IRentalService {
 
     private final RentalRepository rentalRepository;
+    @Autowired
+    private ShelfItemService  shelfItemService;
+    @Autowired
+    private ShelfService shelfService; 
 
     @Autowired
     public RentalService(RentalRepository rentalRepository) {
@@ -80,6 +88,7 @@ public class RentalService implements IRentalService {
         for (Rental rental : rentals) {
             if (currDate.isAfter(rental.getRentalEnd())) {
                 this.deleteRental(rental.getRentalId());
+                shelfItemService.deleteShelfByRentalId(rental.getRentalId());
                 System.out.println("Rental expired: " + rental.getRentalId());
                 rentalRepository.save(rental);
             }
@@ -97,22 +106,33 @@ public class RentalService implements IRentalService {
 
         // Rental is for 7 days
         LocalDate startDate = LocalDate.now();
-        LocalDate endDate = startDate.plusDays(7);
+        LocalDate endDate = startDate.plusDays(item.getDays());
 
         rental.setRentalStart(startDate);
         rental.setRentalEnd(endDate);
 
-        BigDecimal basePrice = item.getProduct().getPrice();
-        BigDecimal rentalPrice = basePrice.multiply(BigDecimal.valueOf(0.20));
+        BigDecimal basePrice = item.getProduct().getRentPerDay();
+        BigDecimal rentalPrice = basePrice.multiply(BigDecimal.valueOf(item.getDays()));
 
         rental.setPricePaid(rentalPrice);
-
+        BigDecimal authorRoyalty = rentalPrice.multiply(item.getProduct().getRoyaltyAuthor().divide(BigDecimal.valueOf(100)));
+        BigDecimal publisherRoyalty = rentalPrice.multiply(item.getProduct().getRoyaltyPublisher().divide(BigDecimal.valueOf(100)));
         // Dummy royalties
-        rental.setAuthorRoyalty(rentalPrice.multiply(BigDecimal.valueOf(0.10)));
-        rental.setPublisherRoyalty(rentalPrice.multiply(BigDecimal.valueOf(0.05)));
+        rental.setAuthorRoyalty(authorRoyalty);
+        rental.setPublisherRoyalty(publisherRoyalty);
         rental.setRoyaltyType(Rental.RoyaltyType.percentage);
+        
+        Rental savedRental = rentalRepository.save(rental); 
+        int userId = order.getUser().getUserId();
+        Shelf shelf = shelfService.getShelfByUserId(userId).get();
+        ShelfItem shelfItem = new ShelfItem();
+        shelfItem.setRental(savedRental);
+        shelfItem.setFormat(item.getProduct().getFormat());
+        shelfItem.setShelf(shelf);
+        shelfItem.setAccessType(AccessType.rental);
+        shelfItemService.saveShelfItem(shelfItem);
 
-        return rentalRepository.save(rental);
+        return savedRental;
     }
 
 }
