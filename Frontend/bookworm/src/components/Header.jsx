@@ -53,7 +53,7 @@ const Header = () => {
           <CustomNavLink to="/books">Ebooks</CustomNavLink>
           <CustomNavLink to="/audiobooks">Audiobooks</CustomNavLink>
           <CustomNavLink to="/sale">Sale</CustomNavLink>
-          <CustomNavLink to="/shelf">Myshelf</CustomNavLink>
+          <CustomNavLink to="/shelf">MyShelf</CustomNavLink>
         </nav>
 
         {/* Right Side - Buttons and Avatar */}
@@ -77,7 +77,7 @@ const Header = () => {
                 <div className="absolute right-0 mt-2 w-44 bg-white shadow-lg border rounded-md overflow-hidden z-50">
                   {/* About Us with hover */}
                   <Link
-                    to="/contact"
+                    to="/about"
                     className="flex items-center gap-2 px-4 py-2 hover:bg-gray-100 text-[#2d2c2a] transition-colors duration-200"
                   >
                     <Phone className="w-4 h-4" /> About Us
