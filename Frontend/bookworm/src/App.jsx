@@ -1,34 +1,60 @@
 // App.js
 
 import React from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import WelcomePage from "./pages/WelcomePage";
 import HomePage from "./pages/HomePage";
 import Login from "./pages/Login";
+
 import About_us from "./pages/About_us";
 import Footer from "./pages/Footer";
-import Navbar from "./components/Navbar";
+
+
+import Header from "./components/Header";
+
 import { AuthProvider, useAuth } from "./contexts/AuthContext";
 
-// Wrapper Component to switch landing/home
+// Wrapper Component for Routes
 function ConditionalRoutes() {
   const { isLoggedIn } = useAuth();
 
   return (
     <>
-      {/* ✅ Navbar visible when logged in */}
-      {isLoggedIn && <Navbar />}
+
+      {/* Show Header only if logged in */}
+      {isLoggedIn && <Header />}
 
       <Routes>
-        {isLoggedIn ? (
-          <Route path="/" element={<HomePage />} />
-        ) : (
-          <Route path="/" element={<WelcomePage />} />
-        )}
+        {/* Redirect root based on auth status */}
+        <Route
+          path="/"
+          element={
+            isLoggedIn ? <Navigate to="/home" replace /> : <WelcomePage />
+          }
+        />
 
-        {/* Accessible routes for both logged-in and guest users */}
-        <Route path="/login" element={<Login />} />
-        <Route path="/about_us" element={<About_us />} />
+        {/* Home Route - Only for Logged In */}
+        <Route
+          path="/home"
+          element={
+            isLoggedIn ? <HomePage /> : <Navigate to="/" replace />
+          }
+        />
+
+        {/* Login Route - Only when NOT logged in */}
+        <Route
+          path="/login"
+          element={
+            isLoggedIn ? <Navigate to="/home" replace /> : <Login />
+          }
+        />
+
+        {/* Optional fallback for unknown routes */}
+        <Route
+          path="*"
+          element={<Navigate to="/" replace />}
+        />
+
       </Routes>
 
       {/* ✅ Footer visible always */}
