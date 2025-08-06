@@ -115,7 +115,7 @@ public class CartController {
         return ResponseEntity.noContent().build();
     }
 
-    // Get total amount of the cart
+   //  Get total amount of the cart
     @GetMapping("/total")
     public ResponseEntity<BigDecimal> getCartTotal() {
     	int userId = provider.getCurrentUser().get().getUserId();

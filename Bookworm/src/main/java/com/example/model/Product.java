@@ -22,7 +22,10 @@ public class Product {
 
     @Column(unique = true, nullable = false)
     private String isbn;
-
+    
+    @Column(nullable = true)
+    private BigDecimal 	rentPerDay;
+    
     @Column(nullable = false)
     private BigDecimal price;
 
@@ -31,6 +34,8 @@ public class Product {
     @Cascade(org.hibernate.annotations.CascadeType.PERSIST)
     private Author author;
 
+    
+    
     @ManyToOne
     @JoinColumn(name = "Publisher_ID", nullable = false)
     @Cascade(org.hibernate.annotations.CascadeType.PERSIST)
@@ -41,6 +46,11 @@ public class Product {
     @Cascade(org.hibernate.annotations.CascadeType.PERSIST)
     private Language language;
 
+    @ManyToOne
+    @JoinColumn(name = "Discount_ID", nullable = true)
+    @Cascade(org.hibernate.annotations.CascadeType.PERSIST)
+    private Discount discount ;
+    
     @ManyToOne
     @JoinColumn(name = "Format_ID", nullable = false)
     @Cascade(org.hibernate.annotations.CascadeType.PERSIST)
@@ -69,16 +79,38 @@ public class Product {
     @Column(name = "Is_Active")
     private Boolean isActive = true;
 
+    @Transient
+    private BigDecimal discountedPrice;
+
+    
     @Column(name = "Created_At", insertable = false, updatable = false)
     private Timestamp createdAt;
 
     // Getters and Setters
 
+    
+    
     public int getProductId() {
         return productId;
     }
 
-    public void setProductId(int productId) {
+    public BigDecimal getRentPerDay() {
+		return rentPerDay;
+	}
+
+	public void setRentPerDay(BigDecimal rentPerDay) {
+		this.rentPerDay = rentPerDay;
+	}
+
+	public Discount getDiscount() {
+		return discount;
+	}
+
+	public void setDiscount(Discount discount) {
+		this.discount = discount;
+	}
+
+	public void setProductId(int productId) {
         this.productId = productId;
     }
 
@@ -209,4 +241,21 @@ public class Product {
     public void setCreatedAt(Timestamp createdAt) {
         this.createdAt = createdAt;
     }
+    
+    public BigDecimal getDiscountedPrice() {
+        if (discount == null) {
+            return price;
+        }
+
+        switch (discount.getDiscountType()) {
+            case flat:
+                return price.subtract(discount.getValue()).max(BigDecimal.ZERO);
+            case percentage:
+                BigDecimal percentageOff = price.multiply(discount.getValue().divide(BigDecimal.valueOf(100)));
+                return price.subtract(percentageOff).max(BigDecimal.ZERO);
+            default:
+                return price;
+        }
+    }
+
 }

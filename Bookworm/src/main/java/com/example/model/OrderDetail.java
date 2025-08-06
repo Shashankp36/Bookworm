@@ -24,11 +24,11 @@ public class OrderDetail {
     @Column(name = "Product_Type", nullable = false)
     private ProductType productType;
 
-    @Column(name = "Unit_Price", nullable = false)
-    private BigDecimal unitPrice;
+//    @Column(name = "Unit_Price", nullable = false)
+//    private BigDecimal unitPrice;
 
-    @Column(name = "Subtotal", nullable = false)
-    private BigDecimal subtotal;
+//    @Column(name = "Subtotal", nullable = false)
+//    private BigDecimal subtotal;
 
     public enum ProductType {
         ebook,
@@ -80,19 +80,19 @@ public class OrderDetail {
     }
 
 
-    public BigDecimal getUnitPrice() {
-        return unitPrice;
-    }
-
-    public void setUnitPrice(BigDecimal unitPrice) {
-        this.unitPrice = unitPrice;
-    }
-
-    public BigDecimal getSubtotal() {
-        return subtotal;
-    }
-
-    public void setSubtotal(BigDecimal subtotal) {
-        this.subtotal = subtotal;
-    }
+//    public BigDecimal getUnitPrice() {
+//        return unitPrice;
+//    }
+//
+//    public void setUnitPrice(BigDecimal unitPrice) {
+//        this.unitPrice = unitPrice;
+//    }
+//
+//    public BigDecimal getSubtotal() {
+//        return subtotal;
+//    }
+//
+//    public void setSubtotal(BigDecimal subtotal) {
+//        this.subtotal = subtotal;
+//    }
 }

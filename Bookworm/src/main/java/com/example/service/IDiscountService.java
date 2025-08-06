@@ -11,5 +11,5 @@ Optional<Discount> getDiscountById(int id);
 List<Discount> getAllDiscounts();
 void deleteDiscount(int id);
 
-List<Discount> getDiscountsByProductId(int productId);
+
 }

@@ -82,4 +82,12 @@ public class CartItem {
 	public void setItemType(ItemType itemType) {
 		this.itemType = itemType;
 	}
+
+	@Override
+	public String toString() {
+		return "CartItem [cartItemId=" + cartItemId + ", cart=" + cart + ", product=" + product + ", appliedDiscount="
+				+ appliedDiscount + ", itemType=" + itemType + "]";
+	}
+	
+	
 }

@@ -79,34 +79,35 @@ public void deleteCartByUserId(int userId) {
 public BigDecimal calculateCartTotal(Cart cart) {
     BigDecimal total = BigDecimal.ZERO;
 
+    System.out.println(cart.getCartItems());
     for (CartItem item : cart.getCartItems()) {
         BigDecimal price = item.getProduct().getPrice();
         Discount discount = item.getAppliedDiscount();
         BigDecimal finalPrice;
 
-        // Determine base price based on type
         if (item.getItemType() == ItemType.RENT) {
-            // 20% of full price for 7-day rental
-            finalPrice = price.multiply(BigDecimal.valueOf(0.2));
+       
+            BigDecimal rentPerDay = item.getProduct().getRentPerDay();
+            finalPrice = rentPerDay.multiply(BigDecimal.valueOf(7));
         } else {
-            // PURCHASE: start with full price
+            // PURCHASE
             finalPrice = price;
-        }
 
-        // Apply discount only for PURCHASE items (optional rule)
-        if (item.getItemType() == ItemType.PURCHASE && discount != null && discount.getDiscountType() != null) {
-            switch (discount.getDiscountType()) {
-                case flat:
-                    finalPrice = finalPrice.subtract(discount.getValue());
-                    break;
-                case percentage:
-                    BigDecimal discountAmount = finalPrice.multiply(discount.getValue()).divide(BigDecimal.valueOf(100));
-                    finalPrice = finalPrice.subtract(discountAmount);
-                    break;
+            if (discount != null && discount.getDiscountType() != null) {
+                switch (discount.getDiscountType()) {
+                    case flat:
+                        finalPrice = finalPrice.subtract(discount.getValue());
+                        break;
+                    case percentage:
+                        BigDecimal discountAmount = finalPrice.multiply(discount.getValue())
+                                                              .divide(BigDecimal.valueOf(100));
+                        finalPrice = finalPrice.subtract(discountAmount);
+                        break;
+                }
             }
         }
 
-        // No negative totals
+        // Ensure non-negative
         if (finalPrice.compareTo(BigDecimal.ZERO) < 0)
             finalPrice = BigDecimal.ZERO;
 
@@ -115,6 +116,7 @@ public BigDecimal calculateCartTotal(Cart cart) {
 
     return total;
 }
+
 @Override
 public void clearCart(Cart cart) {
     cart.getCartItems().clear();
