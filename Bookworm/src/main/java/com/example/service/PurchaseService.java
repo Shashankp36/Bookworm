@@ -1,25 +1,52 @@
 package com.example.service;
 
-import com.example.model.CartItem;
-import com.example.model.Order;
-import com.example.model.Purchase;
-import com.example.model.Purchase.RoyaltyType;
-import com.example.repository.PurchaseRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.example.configuration.SessionUserProvider;
+import com.example.model.CartItem;
+import com.example.model.Order;
+import com.example.model.Product;
+import com.example.model.Purchase;
+
+import com.example.model.Purchase.RoyaltyType;
+import com.example.model.Shelf;
+import com.example.model.ShelfItem;
+import com.example.model.ShelfItem.AccessType;
+import com.example.repository.PurchaseRepository;
+
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
+
+
 @Service
 public class PurchaseService implements IPurchaseService {
 
+    private final ShelfItemService shelfItemService_1;
+
     private final PurchaseRepository purchaseRepository;
+    private final SessionUserProvider provider;
+    private final IShelf shelf;
+    private final IShelfItemService shelfItemService;
 
     @Autowired
-    public PurchaseService(PurchaseRepository purchaseRepository) {
+    public PurchaseService(PurchaseRepository purchaseRepository, SessionUserProvider provider, IShelfItemService shelfItemService, IShelf shelf, ShelfItemService shelfItemService_1) {
         this.purchaseRepository = purchaseRepository;
+		this.provider = provider;
+		this.shelf = shelf;
+		this.shelfItemService = shelfItemService;
+		this.shelfItemService_1 = shelfItemService_1;
     }
 
     // Save a new purchase
@@ -67,37 +94,41 @@ public class PurchaseService implements IPurchaseService {
         return purchaseRepository.findByPurchaseDateBetween(start, end);
     }
 
-    // Get purchases by royalty type
-    @Override
-    public List<Purchase> getPurchasesByRoyaltyType(RoyaltyType royaltyType) {
-        return purchaseRepository.findByRoyaltyType(royaltyType);
-    }
-
     // Count purchases by user
     @Override
     public long countPurchasesByUser(int userId) {
         return purchaseRepository.countByUserUserId(userId);
     }
+
+    // Save purchase with actual royalty calculation from product
     @Override
     public Purchase save(Order order, CartItem item) {
+
+        Product product = item.getProduct();
+        BigDecimal price = product.getPrice();
+
+        // Real royalty calculation (percentage-based)
+        BigDecimal authorRoyalty = price.multiply(product.getRoyaltyAuthor().divide(BigDecimal.valueOf(100)));
+        BigDecimal publisherRoyalty = price.multiply(product.getRoyaltyPublisher().divide(BigDecimal.valueOf(100)));
+
         Purchase purchase = new Purchase();
         purchase.setOrder(order);
-        purchase.setUser(order.getUser()); // Set the user from order
-        purchase.setProduct(item.getProduct());
+        purchase.setUser(order.getUser());
+        purchase.setProduct(product);
+        purchase.setPricePaid(price);
+        purchase.setAuthorRoyalty(authorRoyalty);
+        purchase.setPublisherRoyalty(publisherRoyalty);
 
-        // Set price paid
-        purchase.setPricePaid(item.getProduct().getPrice());
-
-        // Dummy royalty logic (replace later with real logic)
-        purchase.setAuthorRoyalty(item.getProduct().getPrice().multiply(java.math.BigDecimal.valueOf(0.10)));
-        purchase.setPublisherRoyalty(item.getProduct().getPrice().multiply(java.math.BigDecimal.valueOf(0.05)));
-        purchase.setRoyaltyType(RoyaltyType.percentage);
-
-        // Set date
         purchase.setPurchaseDate(LocalDateTime.now());
-
-        return purchaseRepository.save(purchase);
+        Purchase savePurchase = purchaseRepository.save(purchase);
+        int userId =  savePurchase.getUser().getUserId();
+        Shelf shelf1 = shelf.getShelfByUserId(userId).get();
+        ShelfItem shelfItem = new ShelfItem();
+        shelfItem.setPurchase(savePurchase);
+        shelfItem.setFormat(product.getFormat());
+        shelfItem.setShelf(shelf1);
+        shelfItem.setAccessType(AccessType.purchase);
+        shelfItemService.saveShelfItem(shelfItem);
+        return savePurchase;
     }
-
-
 }

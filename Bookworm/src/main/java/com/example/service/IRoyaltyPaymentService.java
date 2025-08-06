@@ -1,5 +1,8 @@
 package com.example.service;
 
+import com.example.model.CartItem;
+import com.example.model.Order;
+import com.example.model.Purchase;
 import com.example.model.RoyaltyPayment;
 import com.example.model.RoyaltyPayment.PayeeType;
 import com.example.model.RoyaltyPayment.RoyaltyType;
@@ -19,4 +22,6 @@ List<RoyaltyPayment> getByProductId(int productId);
 List<RoyaltyPayment> getByOrderId(int orderId);
 BigDecimal getTotalRoyaltyAmount(PayeeType payeeType, int payeeId);
 List<RoyaltyPayment> getByRoyaltyType(RoyaltyType royaltyType);
+void saveRoyalty(Purchase purchase, CartItem item, Order order);
+
 }

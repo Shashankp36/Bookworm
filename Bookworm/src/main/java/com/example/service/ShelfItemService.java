@@ -67,4 +67,10 @@ public class ShelfItemService implements IShelfItemService {
     public ShelfItem updateShelfItem(ShelfItem item) {
         return shelfItemRepository.save(item); // Save also updates if ID is present
     }
+    @Override
+    public void deleteShelfByRentalId(int rentalId) {
+        shelfItemRepository.deleteByRentalId(rentalId);
+    }
+
+    
 }

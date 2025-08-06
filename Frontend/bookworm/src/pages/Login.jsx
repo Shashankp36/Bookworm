@@ -158,26 +158,26 @@ const Login = () => {
           <form className="w-82" onSubmit={handleSubmit} noValidate>
             {isRegistering && (
               <>
-                <input type="text" name="fullName" placeholder="Full Name" className="input mb-1" required onBlur={handleBlur} />
+                <input type="text" name="fullName" placeholder="Full Name" className="input mb-3" required onBlur={handleBlur} />
                 {errors.fullName && <p className="text-red-500 text-sm mb-2">{errors.fullName}</p>}
-                <input type="email" name="email" placeholder="Email" className="input mb-1" required onBlur={handleBlur} />
+                <input type="email" name="email" placeholder="Email" className="input mb-3 " required onBlur={handleBlur} />
                 {errors.email && <p className="text-red-500 text-sm mb-2">{errors.email}</p>}
-                <input type="text" name="phone" placeholder="Phone" className="input mb-1" required onBlur={handleBlur} />
+                <input type="text" name="phone" placeholder="Phone" className="input mb-3" required onBlur={handleBlur} />
                 {errors.phone && <p className="text-red-500 text-sm mb-2">{errors.phone}</p>}
-                <input type="text" name="address" placeholder="Address" className="input mb-1" required onBlur={handleBlur} />
+                <input type="text" name="address" placeholder="Address" className="input mb-3" required onBlur={handleBlur} />
                 {errors.address && <p className="text-red-500 text-sm mb-2">{errors.address}</p>}
               </>
             )}
 
             {!isRegistering && (
               <>
-                <input type="email" name="email" placeholder="Email" className="input mb-1" required onBlur={handleBlur} />
+                <input type="email" name="email" placeholder="Email" className="input mb-3 w-80" required onBlur={handleBlur} />
                 {errors.email && <p className="text-red-500 text-sm mb-2">{errors.email}</p>}
               </>
             )}
 
             <div className="relative">
-              <input type={showPassword ? "text" : "password"} name="password" placeholder="Password" className="input mb-1" required onBlur={handleBlur} />
+              <input type={showPassword ? "text" : "password"} name="password" placeholder="Password" className="input mb-3" required onBlur={handleBlur} />
               <span onClick={() => setShowPassword(!showPassword)} className="absolute top-2 right-4 text-sm cursor-pointer text-gray-300">
                 {showPassword ? "🙈" : "👁️"}
               </span>
@@ -186,22 +186,28 @@ const Login = () => {
 
             {isRegistering && (
               <>
-                <input type="password" name="confirmPassword" placeholder="Confirm Password" className="input mb-1" required onBlur={handleBlur} />
+                <input type="password" name="confirmPassword" placeholder="Confirm Password" className="input mb-14" required onBlur={handleBlur} />
                 {errors.confirmPassword && <p className="text-red-500 text-sm mb-2">{errors.confirmPassword}</p>}
               </>
             )}
 
             {!isRegistering && (
-              <div className="flex justify-between text-sm mb-4">
+              <div className="flex justify-between text-sm mb-6 ">
                 <label className="flex items-center">
-                  <input type="checkbox" className="mr-4" />
+                  <input type="checkbox" className="mr-6" />
                   Remember Me
                 </label>
                 <a href="#" className="text-white-400 hover:underline">Forgot?</a>
               </div>
             )}
 
-            <button type="submit" className="btn w-full mb-8">{isRegistering ? "Register" : "Login"}</button>
+           <button
+  type="submit"
+  className="w-full mb-8 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 px-4 rounded transition"
+>
+  {isRegistering ? "Register" : "Login"}
+</button>
+
           </form>
         </div>
 

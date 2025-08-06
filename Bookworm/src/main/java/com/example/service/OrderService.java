@@ -15,10 +15,13 @@ import java.util.Optional;
 public class OrderService implements IOrderService {
 
     private final OrderRepository orderRepository;
-
+    private final IUser userService ;
+    
     @Autowired
-    public OrderService(OrderRepository orderRepository) {
+    public OrderService(OrderRepository orderRepository, IUser userService) {
         this.orderRepository = orderRepository;
+		this.userService = userService;
+		
     }
 
     // Create or update an order
@@ -69,8 +72,7 @@ public class OrderService implements IOrderService {
     @Override
     public Order createOrder(int userId, BigDecimal amount) {
         Order order = new Order();
-        User user = new User();
-        user.setUserId(userId); // assume existing user
+        User user = userService.getUserById(userId).get();
         order.setUser(user);
         order.setTotalAmount(amount);
         order.setOrderDate(LocalDateTime.now());

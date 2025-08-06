@@ -1,5 +1,6 @@
 package com.example.controller;
 
+import com.example.configuration.SessionUserProvider;
 import com.example.model.*;
 import com.example.security.JwtUtil;
 import com.example.service.*;
@@ -20,16 +21,17 @@ public class OrdersController {
     @Autowired private OrderDetailService orderDetailService;
     @Autowired private PurchaseService purchaseService;
     @Autowired private RentalService rentalService;
-    @Autowired private RoyaltyPaymentService royaltyPaymentService;
+//    @Autowired private RoyaltyPaymentService royaltyPaymentService;
     @Autowired private CartService cartService;
     @Autowired private JwtUtil jwtUtil;
+    @Autowired private SessionUserProvider provider;
+    @Autowired private IRoyaltyPaymentService royaltyService;
 
     @PostMapping("/pay")
-    public ResponseEntity<String> placeOrder(HttpServletRequest request,
-                                             @RequestParam BigDecimal amount,
-                                             @RequestParam String paymentMode) {
+    public ResponseEntity<String> placeOrder(  @RequestParam BigDecimal amount,
+    		@RequestParam String paymentMode) {
         // ✅ Get userId from session
-        int userId = (int) request.getSession().getAttribute("userId");
+        int userId = provider.getCurrentUser().get().getUserId();
 
         // ✅ Proceed like your service
         Order order = orderService.createOrder(userId, amount);
@@ -41,13 +43,15 @@ public class OrdersController {
         orderDetailService.saveOrderDetails(order, items);
         for (CartItem item : items) {
             if (item.getItemType() == CartItem.ItemType.PURCHASE) {
-                purchaseService.save(order, item);
+               Purchase purchase =  purchaseService.save(order, item);
+               royaltyService.saveRoyalty(purchase,item,order);
             } else {
-                rentalService.save(order, item);
+              Rental rental = rentalService.save(order, item);
             }
         }
+        
 
-        //royaltyPaymentService.generate(order, items);
+//        royaltyPaymentService.generate(order, items);
         cartService.clearCart(cart);
 
         return ResponseEntity.ok("✅ Order placed successfully. Transaction ID: " + txn.getTransactionId());
