@@ -13,11 +13,22 @@ import com.example.model.CartItem;
 import com.example.model.Order;
 import com.example.model.Product;
 import com.example.model.Purchase;
+
 import com.example.model.Purchase.RoyaltyType;
 import com.example.model.Shelf;
 import com.example.model.ShelfItem;
 import com.example.model.ShelfItem.AccessType;
 import com.example.repository.PurchaseRepository;
+
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
+
 
 @Service
 public class PurchaseService implements IPurchaseService {
@@ -83,37 +94,31 @@ public class PurchaseService implements IPurchaseService {
         return purchaseRepository.findByPurchaseDateBetween(start, end);
     }
 
-    // Get purchases by royalty type
-    @Override
-    public List<Purchase> getPurchasesByRoyaltyType(RoyaltyType royaltyType) {
-        return purchaseRepository.findByRoyaltyType(royaltyType);
-    }
-
     // Count purchases by user
     @Override
     public long countPurchasesByUser(int userId) {
         return purchaseRepository.countByUserUserId(userId);
     }
+
+    // Save purchase with actual royalty calculation from product
     @Override
     public Purchase save(Order order, CartItem item) {
-        Purchase purchase = new Purchase();
-        purchase.setOrder(order);
-        purchase.setUser(order.getUser()); // Set the user from order
-        
+
         Product product = item.getProduct();
-        // Set price paid
-//      purchase.setPricePaid(item.getProduct().getPrice());
         BigDecimal price = product.getPrice();
-    	
+
         // Real royalty calculation (percentage-based)
         BigDecimal authorRoyalty = price.multiply(product.getRoyaltyAuthor().divide(BigDecimal.valueOf(100)));
         BigDecimal publisherRoyalty = price.multiply(product.getRoyaltyPublisher().divide(BigDecimal.valueOf(100)));
 
-        // Dummy royalty logic (replace later with real logic)
+        Purchase purchase = new Purchase();
+        purchase.setOrder(order);
+        purchase.setUser(order.getUser());
+        purchase.setProduct(product);
+        purchase.setPricePaid(price);
         purchase.setAuthorRoyalty(authorRoyalty);
         purchase.setPublisherRoyalty(publisherRoyalty);
-//        purchase.setRoyaltyType(RoyaltyType.percentage);
-        // Set date
+
         purchase.setPurchaseDate(LocalDateTime.now());
         Purchase savePurchase = purchaseRepository.save(purchase);
         int userId =  savePurchase.getUser().getUserId();
@@ -126,6 +131,4 @@ public class PurchaseService implements IPurchaseService {
         shelfItemService.saveShelfItem(shelfItem);
         return savePurchase;
     }
-
-
 }

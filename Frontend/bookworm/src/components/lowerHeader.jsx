@@ -1,45 +1,54 @@
 import React from 'react';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 const languages = ['English', 'Hindi', 'Spanish', 'French'];
 const genres = ['Action', 'Comedy', 'Drama', 'Horror', 'Sci-Fi'];
 
 const LowerHeader = () => {
   return (
-    <div className="w-full bg-white shadow px-6 py-4 flex justify-center">
-      {/* Wrapper */}
-      <div className="flex items-center justify-between w-full max-w-7xl gap-4">
-        
-          {/* Centered Search Bar */}
-     <div className="flex items-center bg-gray-300 rounded-full shadow-inner px-4 py-2 gap-2 w-full max-w-4xl">
-          <input
-            type="text"
-            placeholder="Search anything..."
-            className="bg-transparent flex-grow outline-none rounded-full px-4 py-2 text-gray-900 placeholder:text-gray-900 text-base"
-          />
-          <button className="bg-blue-500 text-white rounded-full px-6 py-2 hover:bg-[#8a6c3a] transition-colors duration-300 font-semibold shadow text-sm">
-            Search
-          </button>
+    <div className="w-100 bg-light border-bottom shadow-sm py-2 px-3">
+      <div className="container-fluid d-flex flex-wrap justify-content-between align-items-center gap-2">
+
+        {/* Search Bar */}
+        <div className="flex-grow-1 d-flex justify-content-center">
+          <div className="input-group w-75" style={{ maxHeight: '42px' }}>
+            <input
+              type="text"
+              className="form-control border-end-0 rounded-start-5 py-1 px-3"
+              placeholder="Search books, authors, genres..."
+              style={{ fontSize: '0.9rem' }}
+            />
+            <button
+              className="btn btn-dark rounded-end-5 px-4"
+              style={{ fontSize: '0.85rem', fontWeight: '500' }}
+            >
+              Search
+            </button>
+          </div>
         </div>
 
-        {/* Left Dropdowns */}
-        <div className="flex items-end gap-3">
+        {/* Dropdowns */}
+        <div className="d-flex gap-2">
           {/* Language Dropdown */}
-          <select className="rounded-full px-5 py-3 bg-gray-200 text-gray-700 hover:bg-gray-300 focus:ring-2 focus:ring-blue-400 font-semibold text-sm shadow cursor-pointer transition-all duration-200">
+          <select
+            className="form-select rounded-5 px-3 py-1 shadow-sm border-secondary"
+            style={{ minWidth: '110px', fontSize: '0.85rem' }}
+          >
             {languages.map((lang) => (
               <option key={lang} value={lang}>{lang}</option>
             ))}
           </select>
 
           {/* Genre Dropdown */}
-          <select className="rounded-full px-5 py-3 bg-gray-200 text-gray-700 hover:bg-gray-300 focus:ring-2 focus:ring-blue-400 font-semibold text-sm shadow cursor-pointer transition-all duration-200">
+          <select
+            className="form-select rounded-5 px-3 py-1 shadow-sm border-secondary"
+            style={{ minWidth: '110px', fontSize: '0.85rem' }}
+          >
             {genres.map((genre) => (
               <option key={genre} value={genre}>{genre}</option>
             ))}
           </select>
         </div>
-
-      
-       
 
       </div>
     </div>

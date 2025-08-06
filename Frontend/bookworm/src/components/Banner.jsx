@@ -1,68 +1,84 @@
-import React from 'react';
+// BookCarousel.jsx
+import React from "react";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Navigation, Pagination, Autoplay } from "swiper/modules";
+import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/pagination";
+import "swiper/css/autoplay";
 
-const demoBooks = [
+const books = [
   {
-    title: 'The Great Gatsby',
-    image: 'https://source.unsplash.com/200x300/?book,gatsby',
+    id: 1,
+    name: "David Dell",
+    text: "The lorem text the section contain contains header having open and close functionality.",
+    image: "https://randomuser.me/api/portraits/men/32.jpg",
   },
   {
-    title: '1984',
-    image: 'https://source.unsplash.com/200x300/?book,1984',
+    id: 2,
+    name: "Rose Bush",
+    text: "The lorem text the section contain contains header having open and close functionality.",
+    image: "https://randomuser.me/api/portraits/women/44.jpg",
   },
   {
-    title: 'To Kill a Mockingbird',
-    image: 'https://source.unsplash.com/200x300/?book,mockingbird',
+    id: 3,
+    name: "Jones Gail",
+    text: "The lorem text the section contain contains header having open and close functionality.",
+    image: "https://randomuser.me/api/portraits/men/52.jpg",
   },
   {
-    title: 'Pride and Prejudice',
-    image: 'https://source.unsplash.com/200x300/?book,pride',
+    id: 4,
+    name: "Sarah Stone",
+    text: "The lorem text the section contain contains header having open and close functionality.",
+    image: "https://randomuser.me/api/portraits/women/68.jpg",
   },
   {
-    title: 'Harry Potter',
-    image: 'https://source.unsplash.com/200x300/?book,harrypotter',
-  },
-  {
-    title: 'The Hobbit',
-    image: 'https://source.unsplash.com/200x300/?book,hobbit',
+    id: 5,
+    name: "Peter Ray",
+    text: "The lorem text the section contain contains header having open and close functionality.",
+    image: "https://randomuser.me/api/portraits/men/73.jpg",
   },
 ];
-
 const Banner = () => {
   return (
-    <>
-      {/* Banner Section */}
-      <div
-        className="w-full h-64 bg-cover bg-center relative"
-        style={{ backgroundImage: 'url(https://source.unsplash.com/1600x400/?books)' }}
+    <div className="w-full px-2 py-8 bg-white"> {/* Give it some space and background */}
+      <Swiper
+        modules={[Navigation, Pagination, Autoplay]}
+        spaceBetween={0}
+        slidesPerView={1}
+        navigation
+        pagination={{ clickable: true }}
+        autoplay={{ delay: 3000, disableOnInteraction: false }}
+        breakpoints={{
+          640: { slidesPerView: 1 },
+          768: { slidesPerView: 2 },
+          1024: { slidesPerView: 3 },
+        }}
       >
-        <div className="absolute inset-0 bg-black bg-opacity-60 flex items-center justify-center">
-          <h2 className="text-3xl md:text-4xl font-bold text-white text-center px-4">
-            Discover Your Next Favorite Book
-          </h2>
-        </div>
-      </div>
-
-      {/* Scrollable Books Section */}
-      <div className="mt-6 px-4">
-        <h3 className="text-2xl font-semibold mb-4 text-center">Famous Books</h3>
-        <div className="flex overflow-x-auto space-x-4 scrollbar-hide scroll-smooth">
-          {demoBooks.map((book, index) => (
-            <div
-              key={index}
-              className="min-w-[200px] transform hover:scale-105 transition duration-300 ease-in-out cursor-pointer"
-            >
-              <img
-                src={book.image}
-                alt={book.title}
-                className="w-full h-72 object-cover rounded-lg shadow-md"
-              />
-              <p className="mt-2 text-center font-medium">{book.title}</p>
+        {books.map((book) => (
+          <SwiperSlide key={book.id}>
+            <div className="flex justify-center">
+              <div className="bg-white shadow rounded-2xl overflow-hidden w-full max-w-xs">
+                <div className="bg-blue-500 flex flex-col items-center pt-6 pb-4">
+                  <img
+                    src={book.image}
+                    alt={book.name}
+                    className="w-24 h-24 rounded-full border-4 border-white object-cover"
+                  />
+                </div>
+                <div className="p-4 text-center">
+                  <h3 className="text-lg font-semibold">{book.name}</h3>
+                  <p className="text-sm text-gray-500 my-2">{book.text}</p>
+                  <button className="btn btn-primary mt-2">View More</button>
+                </div>
+              </div>
             </div>
-          ))}
-        </div>
-      </div>
-    </>
+          </SwiperSlide>
+        ))}
+      </Swiper>
+    </div>
   );
 };
+
 
 export default Banner;
