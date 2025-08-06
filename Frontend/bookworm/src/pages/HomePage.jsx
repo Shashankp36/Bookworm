@@ -1,10 +1,10 @@
-import Banner from '../components/Banner';
+import HomeCarousal from '../components/HomeCarousal';
 import PopularBooks from '../components/PopularBooks';
 
 function HomePage() {
   return (
     <div className="bg-gray-900 min-h-screen text-white">
-      <Banner />
+      <HomeCarousal />
       <PopularBooks/>
     </div>
   );

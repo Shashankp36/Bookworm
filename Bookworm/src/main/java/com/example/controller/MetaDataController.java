@@ -20,7 +20,9 @@ import com.example.service.ILanguage;
 import com.example.service.IPublisher;
 
 @RestController
-@RequestMapping("/api")
+
+@RequestMapping("/api/meta")
+
 public class MetaDataController {
 
     @Autowired private IGenre genreService;

@@ -39,13 +39,12 @@ const books = [
     image: "https://randomuser.me/api/portraits/men/73.jpg",
   },
 ];
-
 const Banner = () => {
   return (
-    <div className="w-full px-2 pt-24 pb-8">
+    <div className="w-full px-2 py-8 bg-white"> {/* Give it some space and background */}
       <Swiper
         modules={[Navigation, Pagination, Autoplay]}
-        spaceBetween={0} // ⬅️ Reduced gap between slides
+        spaceBetween={0}
         slidesPerView={1}
         navigation
         pagination={{ clickable: true }}
@@ -80,5 +79,6 @@ const Banner = () => {
     </div>
   );
 };
+
 
 export default Banner;
