@@ -22,19 +22,20 @@ const BookwormLanding = () => {
       {/* Center Content */}
       <div className="relative z-10 flex items-center justify-center min-h-screen px-4">
         <div className="text-center max-w-2xl">
-          <div className="text-6xl mb-6 animate-bounce">📚</div>
+          {/* Increased Book Icon Size */}
+          <div className="text-7xl mb-6 animate-bounce">📚</div>
 
           <h1 className="text-5xl font-bold mb-4">Bookworm</h1>
-          <p className="text-lg text-gray-300 mb-8">
-            Your gateway to the world of literature
+          <p className="text-lg text-gray-300 mb-8 font-semibold">
+            Welcome to the world of literature
           </p>
 
-          <h2 className="text-2xl font-semibold mb-3">
-            Buy Books | Explore Authors | Discover Genres
-          </h2>
+
+          <h1 className="text-xl font-semibold mb-3">
+            Buy and Rent Books | Explore Books with Various Genres
+          </h1>
           <p className="text-gray-400 mb-10 leading-relaxed">
-            Dive into a curated collection of ebooks, audiobooks, and author
-            profiles. Find your next favorite read and stay in touch with
+            Dive into a curated collection of ebooks, audiobooks. Search for your next favorite read and stay in touch with
             literature like never before.
           </p>
 

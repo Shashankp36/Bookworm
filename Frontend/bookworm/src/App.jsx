@@ -5,30 +5,34 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import WelcomePage from "./pages/WelcomePage";
 import HomePage from "./pages/HomePage";
 import Login from "./pages/Login";
+import About_us from "./pages/About_us";
+import Footer from "./pages/Footer";
 import Navbar from "./components/Navbar";
 import { AuthProvider, useAuth } from "./contexts/AuthContext";
 
 // Wrapper Component to switch landing/home
 function ConditionalRoutes() {
-  const { isLoggedIn } = useAuth();  // <-- "user" ki jagah "isLoggedIn"
+  const { isLoggedIn } = useAuth();
 
   return (
     <>
-      {/* ✅ Show Navbar only when logged in */}
+      {/* ✅ Navbar visible when logged in */}
       {isLoggedIn && <Navbar />}
 
       <Routes>
         {isLoggedIn ? (
-          // If logged in
           <Route path="/" element={<HomePage />} />
         ) : (
-          // If not logged in
           <Route path="/" element={<WelcomePage />} />
         )}
 
-        {/* Login route accessible in both cases */}
+        {/* Accessible routes for both logged-in and guest users */}
         <Route path="/login" element={<Login />} />
+        <Route path="/about_us" element={<About_us />} />
       </Routes>
+
+      {/* ✅ Footer visible always */}
+      <Footer />
     </>
   );
 }
