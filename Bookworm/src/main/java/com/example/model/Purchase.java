@@ -34,15 +34,15 @@ public class Purchase {
 	@Column(name = "Publisher_Royalty", nullable = false)
 	private BigDecimal publisherRoyalty;
 
-	@Enumerated(EnumType.STRING)
-	@Column(name = "Royalty_Type", nullable = false)
-	private RoyaltyType royaltyType;
+//	@Enumerated(EnumType.STRING)
+//	@Column(name = "Royalty_Type", nullable = false)
+//	private RoyaltyType royaltyType;
 
 	// Enum for Royalty Type
-	public enum RoyaltyType {
-	    percentage,
-	    fixed
-	}
+//	public enum RoyaltyType {
+//	    percentage,
+//	    fixed
+//	}
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "Order_ID", nullable = false)
 	private Order order;
@@ -110,13 +110,13 @@ public class Purchase {
 	    this.publisherRoyalty = publisherRoyalty;
 	}
 
-	public RoyaltyType getRoyaltyType() {
-	    return royaltyType;
-	}
-
-	public void setRoyaltyType(RoyaltyType royaltyType) {
-	    this.royaltyType = royaltyType;
-	}
+//	public RoyaltyType getRoyaltyType() {
+//	    return royaltyType;
+//	}
+//
+//	public void setRoyaltyType(RoyaltyType royaltyType) {
+//	    this.royaltyType = royaltyType;
+//	}
 	public Order getOrder() {
 	    return order;
 	}
