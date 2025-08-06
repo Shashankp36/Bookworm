@@ -1,5 +1,7 @@
 package com.example.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import jakarta.persistence.*;
 
 @Entity
@@ -13,6 +15,7 @@ public class CartItem {
 
 	@ManyToOne
 	@JoinColumn(name = "Cart_ID", nullable = false)
+	@JsonBackReference
 	private Cart cart;
 
 	@ManyToOne

@@ -15,6 +15,7 @@ public class Purchase {
 
 	@ManyToOne
 	@JoinColumn(name = "User_ID", nullable = false)
+	
 	private User user;
 
 	@ManyToOne
@@ -42,6 +43,11 @@ public class Purchase {
 	    percentage,
 	    fixed
 	}
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "Order_ID", nullable = false)
+	private Order order;
+
+	
 
 	// Constructors
 	public Purchase() {}
@@ -110,6 +116,13 @@ public class Purchase {
 
 	public void setRoyaltyType(RoyaltyType royaltyType) {
 	    this.royaltyType = royaltyType;
+	}
+	public Order getOrder() {
+	    return order;
+	}
+
+	public void setOrder(Order order) {
+	    this.order = order;
 	}
 
 }

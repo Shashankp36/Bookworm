@@ -1,9 +1,13 @@
 package com.example.model;
 
+import java.util.List;
+
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.*;
+
 
 @Entity
 @Table(name = "Shelfs")
@@ -19,6 +23,9 @@ public class Shelf {
     @JsonBackReference
     private User user;
 
+    @OneToMany(mappedBy = "shelf", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonManagedReference
+    private List<ShelfItem> items;
 
     // Getters and Setters
 
@@ -36,5 +43,13 @@ public class Shelf {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public List<ShelfItem> getItems() {
+        return items;
+    }
+
+    public void setItems(List<ShelfItem> items) {
+        this.items = items;
     }
 }
