@@ -21,7 +21,7 @@ public class OrdersController {
     @Autowired private OrderDetailService orderDetailService;
     @Autowired private PurchaseService purchaseService;
     @Autowired private RentalService rentalService;
-    @Autowired private RoyaltyPaymentService royaltyPaymentService;
+//    @Autowired private RoyaltyPaymentService royaltyPaymentService;
     @Autowired private CartService cartService;
     @Autowired private JwtUtil jwtUtil;
     @Autowired private SessionUserProvider provider;
@@ -43,10 +43,10 @@ public class OrdersController {
         orderDetailService.saveOrderDetails(order, items);
         for (CartItem item : items) {
             if (item.getItemType() == CartItem.ItemType.PURCHASE) {
-                purchaseService.save(order, item);
-                
+               Purchase purchase =  purchaseService.save(order, item);
+               royaltyService.saveRoyalty(purchase,item,order);
             } else {
-                rentalService.save(order, item);
+              Rental rental = rentalService.save(order, item);
             }
         }
         
