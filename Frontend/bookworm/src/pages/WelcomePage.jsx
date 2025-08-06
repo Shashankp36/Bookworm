@@ -47,7 +47,9 @@ const BookwormLanding = () => {
               Login
             </button>
             <button
-              onClick={() => navigate("/signup")}
+              onClick={() =>
+                navigate("/login", { state: { formType: "register" } })
+              }
               className="px-6 py-2 bg-gray-700 text-white rounded-full hover:bg-white hover:text-black border border-white transition duration-300"
             >
               Signup
