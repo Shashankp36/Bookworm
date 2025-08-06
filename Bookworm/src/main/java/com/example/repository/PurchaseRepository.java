@@ -3,7 +3,7 @@ package com.example.repository;
 import com.example.model.Purchase;
 import com.example.model.User;
 import com.example.model.Product;
-import com.example.model.Purchase.RoyaltyType;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.time.LocalDateTime;
@@ -14,7 +14,7 @@ public interface PurchaseRepository extends JpaRepository<Purchase, Integer> {
 
 	List<Purchase> findByProductProductId(int productId);
 	
-	List<Purchase> findByRoyaltyType(RoyaltyType royaltyType);
+
 	
 	List<Purchase> findByPurchaseDateBetween(LocalDateTime start, LocalDateTime end);
 	
