@@ -53,7 +53,7 @@ const Header = () => {
           <CustomNavLink to="/books">Ebooks</CustomNavLink>
           <CustomNavLink to="/audiobooks">Audiobooks</CustomNavLink>
           <CustomNavLink to="/sale">Sale</CustomNavLink>
-          <CustomNavLink to="/shelf">Myshelf</CustomNavLink>
+          <CustomNavLink to="/shelf">MyShelf</CustomNavLink>
         </nav>
 
         {/* Right Side - Buttons and Avatar */}
