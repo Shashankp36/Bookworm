@@ -13,6 +13,8 @@ public class CartItem {
 	@Column(name = "Cart_Item_ID")
 	private int cartItemId;
 
+	@Column(name = "Days")
+    private int days ;
 	@ManyToOne
 	@JoinColumn(name = "Cart_ID", nullable = false)
 	@JsonBackReference
@@ -81,6 +83,16 @@ public class CartItem {
 
 	public void setItemType(ItemType itemType) {
 		this.itemType = itemType;
+	}
+
+	
+	 
+	public int getDays() {
+		return days;
+	}
+
+	public void setDays(int days) {
+		this.days = days;
 	}
 
 	@Override

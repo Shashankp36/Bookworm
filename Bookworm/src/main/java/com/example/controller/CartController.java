@@ -1,9 +1,11 @@
 package com.example.controller;
 
 import com.example.configuration.SessionUserProvider;
+import com.example.dto.AddCartItemRequest;
 import com.example.model.*;
 import com.example.service.*;
 
+import org.aspectj.lang.annotation.RequiredTypes;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -70,15 +72,15 @@ public class CartController {
     // Add item to cart (no quantity since eBooks/audiobooks)
     @PostMapping("/items")
     public ResponseEntity<CartItem> addItem(
-            @RequestParam int productId
+            @RequestBody AddCartItemRequest addCartItem
     ) {
     	int userId = provider.getCurrentUser().get().getUserId();
     	Optional<Cart> cartOpt  = cartService.getCartByUserId(userId);
-        Optional<Product> productOpt = productService.getProductById(productId);
-
+        Optional<Product> productOpt = productService.getProductById(addCartItem.getProductId());
+        
         if (cartOpt.isEmpty() || productOpt.isEmpty()) return ResponseEntity.badRequest().build();
 
-        CartItem item = cartItemService.addOrUpdateItem(cartOpt.get(), productOpt.get());
+        CartItem item = cartItemService.addOrUpdateItem(cartOpt.get(),addCartItem, productOpt.get());
         return ResponseEntity.ok(item);
     }
 
