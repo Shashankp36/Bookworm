@@ -20,9 +20,7 @@ public class Discount {
 	@Column(name = "Value", nullable = false)
 	private BigDecimal value;
 
-	@ManyToOne
-	@JoinColumn(name = "Product_ID")
-	private Product product;
+	
 
 	@OneToMany(mappedBy = "appliedDiscount", cascade = CascadeType.ALL)
 	private List<CartItem> cartItems;
@@ -60,13 +58,7 @@ public class Discount {
 	    this.value = value;
 	}
 
-	public Product getProduct() {
-	    return product;
-	}
 
-	public void setProduct(Product product) {
-	    this.product = product;
-	}
 
 	public List<CartItem> getCartItems() {
 	    return cartItems;

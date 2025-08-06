@@ -83,8 +83,7 @@ public class OrderManagementController {
 
             String formatName = (product.getFormat() != null) ? product.getFormat().getFormatName() : "Unknown";
             detail.setProductType(formatName);
-            detail.setUnitPrice(product.getPrice());
-            detail.setSubtotal(product.getPrice());
+          
 
             return orderDetailService.saveOrUpdateOrderDetail(detail);
         }

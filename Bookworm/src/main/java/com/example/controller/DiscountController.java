@@ -36,11 +36,8 @@ public class DiscountController {
     }
 
     // 3. Get all discounts available for a specific product
-    @GetMapping("/product/{productId}")
-    public ResponseEntity<List<Discount>> getDiscountsByProductId(@PathVariable int productId) {
-        List<Discount> discounts = discountService.getDiscountsByProductId(productId);
-        return ResponseEntity.ok(discounts);
-    }
+
+
 
     //  Admin routes
     
@@ -60,7 +57,7 @@ public class DiscountController {
         Discount discount = existing.get();
         discount.setDiscountType(updated.getDiscountType());
         discount.setValue(updated.getValue());
-        discount.setProduct(updated.getProduct());
+       
         return ResponseEntity.ok(discountService.saveDiscount(discount));
     }
 

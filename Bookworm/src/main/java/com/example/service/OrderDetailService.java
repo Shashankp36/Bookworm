@@ -62,13 +62,13 @@ public void saveOrderDetails(Order order, List<CartItem> items) {
         OrderDetail detail = new OrderDetail();
         detail.setOrder(order);
         detail.setProduct(item.getProduct());
-        detail.setUnitPrice(item.getProduct().getPrice());
+      //  detail.setUnitPrice(item.getProduct().getPrice());
         detail.setProductType(
             item.getProduct().getFormat() != null ?
             item.getProduct().getFormat().getFormatName() :
             "Unknown"
         );
-        detail.setSubtotal(item.getProduct().getPrice()); // no quantity used
+      //  detail.setSubtotal(item.getProduct().getPrice()); // no quantity used
         orderDetailRepository.save(detail);
     }
 }
