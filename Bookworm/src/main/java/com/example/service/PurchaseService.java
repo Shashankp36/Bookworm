@@ -14,7 +14,7 @@ import com.example.model.Order;
 import com.example.model.Product;
 import com.example.model.Purchase;
 
-import com.example.model.Purchase.RoyaltyType;
+
 import com.example.model.Shelf;
 import com.example.model.ShelfItem;
 import com.example.model.ShelfItem.AccessType;
@@ -115,12 +115,13 @@ public class PurchaseService implements IPurchaseService {
         purchase.setOrder(order);
         purchase.setUser(order.getUser());
         purchase.setProduct(product);
-        purchase.setPricePaid(price);
+        purchase.setPricePaid(product.getDiscountedPrice());
         purchase.setAuthorRoyalty(authorRoyalty);
         purchase.setPublisherRoyalty(publisherRoyalty);
-
         purchase.setPurchaseDate(LocalDateTime.now());
         Purchase savePurchase = purchaseRepository.save(purchase);
+        
+        
         int userId =  savePurchase.getUser().getUserId();
         Shelf shelf1 = shelf.getShelfByUserId(userId).get();
         ShelfItem shelfItem = new ShelfItem();

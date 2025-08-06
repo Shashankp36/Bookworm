@@ -14,7 +14,7 @@ public class CartItem {
 	private int cartItemId;
 
 	@Column(name = "Days")
-    private int days ;
+    private Integer days ;
 	@ManyToOne
 	@JoinColumn(name = "Cart_ID", nullable = false)
 	@JsonBackReference
@@ -87,11 +87,11 @@ public class CartItem {
 
 	
 	 
-	public int getDays() {
+	public Integer getDays() {
 		return days;
 	}
 
-	public void setDays(int days) {
+	public void setDays(Integer days) {
 		this.days = days;
 	}
 

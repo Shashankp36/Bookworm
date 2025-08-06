@@ -37,15 +37,15 @@ private BigDecimal authorRoyalty;
 @Column(name = "Publisher_Royalty", nullable = false)
 private BigDecimal publisherRoyalty;
 
-@Enumerated(EnumType.STRING)
-@Column(name = "Royalty_Type", nullable = false)
-private RoyaltyType royaltyType;
-
-// Enum for royalty type
-public enum RoyaltyType {
-    percentage,
-    fixed
-}
+//@Enumerated(EnumType.STRING)
+//@Column(name = "Royalty_Type", nullable = false)
+//private RoyaltyType royaltyType;
+//
+//// Enum for royalty type
+//public enum RoyaltyType {
+//    percentage,
+//    fixed
+//}
 @ManyToOne
 @JoinColumn(name = "Order_ID")
 private Order order;
@@ -124,12 +124,12 @@ public BigDecimal getPublisherRoyalty() {
 public void setPublisherRoyalty(BigDecimal publisherRoyalty) {
     this.publisherRoyalty = publisherRoyalty;
 }
-
-public RoyaltyType getRoyaltyType() {
-    return royaltyType;
-}
-
-public void setRoyaltyType(RoyaltyType royaltyType) {
-    this.royaltyType = royaltyType;
-}
+//
+//public RoyaltyType getRoyaltyType() {
+//    return royaltyType;
+//}
+//
+//public void setRoyaltyType(RoyaltyType royaltyType) {
+//    this.royaltyType = royaltyType;
+//}
 }

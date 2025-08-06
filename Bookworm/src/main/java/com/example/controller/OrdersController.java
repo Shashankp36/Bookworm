@@ -13,7 +13,7 @@ import java.math.BigDecimal;
 import java.util.List;
 
 @RestController
-@RequestMapping("/order")
+@RequestMapping("api/order")
 public class OrdersController {
 
     @Autowired private TransactionService transactionService;
@@ -47,6 +47,7 @@ public class OrdersController {
                royaltyService.saveRoyalty(purchase,item,order);
             } else {
               Rental rental = rentalService.save(order, item);
+              royaltyService.saveRoyalty(rental,item,order);
             }
         }
         

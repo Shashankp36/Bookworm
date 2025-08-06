@@ -3,6 +3,7 @@ package com.example.model;
 import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "RoyaltyPayments")
@@ -36,7 +37,7 @@ public class RoyaltyPayment {
     private BigDecimal amount;
 
     @Column(name = "Payment_Date", nullable = false)
-    private LocalDate paymentDate;
+    private LocalDateTime paymentDate;
 
     // Enums
     public enum RoyaltyType {
@@ -107,11 +108,12 @@ public class RoyaltyPayment {
         this.amount = amount;
     }
 
-    public LocalDate getPaymentDate() {
+    public LocalDateTime getPaymentDate() {
         return paymentDate;
     }
 
-    public void setPaymentDate(LocalDate paymentDate) {
+    public void setPaymentDate(LocalDateTime paymentDate) {
+    	
         this.paymentDate = paymentDate;
     }
 }

@@ -20,13 +20,9 @@ import com.example.service.ILanguage;
 import com.example.service.IPublisher;
 
 @RestController
-<<<<<<< HEAD
-@RequestMapping("/api/meta")
-=======
 
 @RequestMapping("/api/meta")
 
->>>>>>> f2c0038a01c244c396ab81dffdd1fa9e19cfd5b4
 public class MetaDataController {
 
     @Autowired private IGenre genreService;

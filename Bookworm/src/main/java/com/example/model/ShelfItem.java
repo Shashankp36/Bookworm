@@ -19,11 +19,11 @@ public class ShelfItem {
     private Shelf shelf;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "Purchase_ID")
+    @JoinColumn(name = "Purchase_ID",nullable=true)
     private Purchase purchase;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "Rental_ID")
+    @JoinColumn(name = "Rental_ID",nullable = true)
     private Rental rental;
 
     @Enumerated(EnumType.STRING)

@@ -84,16 +84,20 @@ public class RentalService implements IRentalService {
     public void checkExpiry(User user) {
         List<Rental> rentals = this.getRentalsByUser(user);
         LocalDate currDate = LocalDate.now();
-        
+
         for (Rental rental : rentals) {
             if (currDate.isAfter(rental.getRentalEnd())) {
-                this.deleteRental(rental.getRentalId());
+               
                 shelfItemService.deleteShelfByRentalId(rental.getRentalId());
-                System.out.println("Rental expired: " + rental.getRentalId());
-                rentalRepository.save(rental);
+
+               
+                this.deleteRental(rental.getRentalId());
+
+                System.out.println("Rental expired and deleted: " + rental.getRentalId());
             }
         }
     }
+
 
 
     // 8. Save rental from order + cart item
@@ -104,7 +108,7 @@ public class RentalService implements IRentalService {
         rental.setUser(order.getUser());
         rental.setProduct(item.getProduct());
 
-        // Rental is for 7 days
+        
         LocalDate startDate = LocalDate.now();
         LocalDate endDate = startDate.plusDays(item.getDays());
 
@@ -120,7 +124,7 @@ public class RentalService implements IRentalService {
         // Dummy royalties
         rental.setAuthorRoyalty(authorRoyalty);
         rental.setPublisherRoyalty(publisherRoyalty);
-        rental.setRoyaltyType(Rental.RoyaltyType.percentage);
+        
         
         Rental savedRental = rentalRepository.save(rental); 
         int userId = order.getUser().getUserId();
