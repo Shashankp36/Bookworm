@@ -1,28 +1,60 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
+const fallbackCover = "https://strangerthansf.com/scans/asimov-foundation.jpg";
+
 const BookCard = ({ book }) => {
   const navigate = useNavigate();
 
   const handleViewDetails = () => {
-    navigate(`/product/${book.id}`);
+    navigate(`/product/${book.productId}`);
   };
 
+  const handleAddToCart = () => {
+    console.log(`Add to cart: ${book.title}`);
+    // Add to cart logic here
+  };
+
+  const coverUrl = book.coverUrl?.trim() !== "" ? book.coverUrl : fallbackCover;
+
   return (
-    <div className="bg-gray-800 rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition duration-300">
-      <img
-        src={book.image}
-        alt={book.title}
-        className="h-48 w-full object-cover"
-      />
-      <div className="p-4">
-        <h3 className="text-lg font-semibold text-white truncate">{book.title}</h3>
-        <p className="text-sm text-gray-400">{book.author}</p>
-        <button
+    <div className="rounded-2xl p-4 shadow-md bg-[#e5e3df] text-black w-54 flex flex-col justify-between h-full">
+      <div className="flex flex-col items-center space-y-3 flex-grow">
+        <img
+          src={coverUrl}
+          alt={book.title}
+          className="h-42 w-28 object-cover rounded shadow-lg cursor-pointer"
           onClick={handleViewDetails}
-          className="mt-4 w-full bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-1.5 rounded"
+        />
+
+        <h3 className="text-lg font-bold text-center">{book.title}</h3>
+        <p className="text-sm font-medium text-center">{book.author?.authorName}</p>
+      </div>
+
+      {/* Bottom Section: Price + Button */}
+      <div className="mt-8 flex flex-col items-center">
+        {/* Price Section */}
+        {book.discountedPrice && book.discountedPrice < book.price ? (
+          <div className="flex items-center justify-center space-x-2 mb-3">
+            <span className="line-through text-sm text-red-500">₹{book.price}</span>
+            <span className="bg-black px-4 py-0.5 rounded text-sm font-bold text-white">
+              ₹{book.discountedPrice}
+            </span>
+          </div>
+        ) : (
+          <div className="flex justify-center mb-3">
+            <span className="bg-white text-black px-2 py-1 rounded text-sm font-semibold">
+              ₹{book.price}
+            </span>
+          </div>
+        )}
+
+        {/* Add to Cart Button */}
+        <button
+          onClick={handleAddToCart}
+          className="bg-green-600 hover:bg-green-700 text-white px-6 py-2 text-sm rounded w-full"
         >
-          View Details
+          Add to Cart
         </button>
       </div>
     </div>

@@ -6,6 +6,7 @@ import About_us from "./pages/About_us";
 import Footer from "./pages/Footer";
 import Ebook from "./pages/Ebook";
 import Audiobook from "./pages/Audiobook";
+import ProductDetail from './components/ProductDetail'; // ✅ Product detail page
 import Header from "./components/Header";
 
 import { AuthProvider, useAuth } from "./contexts/AuthContext";
@@ -47,11 +48,19 @@ function ConditionalRoutes() {
         {/* ✅ Public About Us page */}
         <Route path="/about" element={<About_us />} />
 
-        {/* ✅ eBooks page (adjust access based on your design) */}
+        {/* ✅ eBooks page */}
         <Route path="/ebooks" element={<Ebook />} />
 
-        {/* ✅ AudioBooks page (adjust access based on your design) */}
+        {/* ✅ AudioBooks page */}
         <Route path="/audiobooks" element={<Audiobook />} />
+
+        {/* ✅ Product Detail route (view book details) */}
+        <Route
+          path="/product/:id"
+          element={
+            isLoggedIn ? <ProductDetail /> : <Navigate to="/login" replace />
+          }
+        />
 
         {/* Fallback route */}
         <Route path="*" element={<Navigate to="/" replace />} />
