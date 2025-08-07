@@ -8,6 +8,7 @@ import Footer from "./pages/Footer";
 import Header from "./components/Header";
 
 import { AuthProvider, useAuth } from "./contexts/AuthContext";
+import PdfViewer from "./components/PdfViewer";
 
 // Wrapper Component for Routes
 function ConditionalRoutes() {
@@ -67,6 +68,7 @@ function App() {
     <AuthProvider>
       <Router>
         <ConditionalRoutes />
+        <PdfViewer/>
       </Router>
     </AuthProvider>
   );
