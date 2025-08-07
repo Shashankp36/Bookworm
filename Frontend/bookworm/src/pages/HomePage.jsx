@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import HomeCarousal from "../components/HomeCarousal";
 import PopularBooks from "../components/PopularBooks";
+import AllProducts from "../components/AllProducts.jsx"; // new import
 
 function HomePage() {
   const [allBooks, setAllBooks] = useState([]);
@@ -33,6 +34,7 @@ function HomePage() {
     <div className="bg-gray-900 min-h-screen text-white">
       <HomeCarousal />
       <PopularBooks books={allBooks.slice(0, 6)} />
+      <AllProducts products={allBooks} />
     </div>
   );
 }
