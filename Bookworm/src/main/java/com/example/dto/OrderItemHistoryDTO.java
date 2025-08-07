@@ -103,6 +103,16 @@ public class OrderItemHistoryDTO {
 		this.rentalEnd = rentalEnd;
 	}
 
+
+	@Override
+	public String toString() {
+		return "OrderItemHistoryDTO [orderId=" + orderId + ", productId=" + productId + ", productType=" + productType
+				+ ", pricePaid=" + pricePaid + ", purchaseDate=" + purchaseDate + ", rentalStart=" + rentalStart
+				+ ", rentalEnd=" + rentalEnd + ", product=" + product + "]";
+	}
+	
+	
+
     // Getters and setters
     // (You can use Lombok @Data or manually generate them)
 }

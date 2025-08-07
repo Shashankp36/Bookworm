@@ -13,6 +13,7 @@ import OrderDetails from "./components/OrderDetails"; // ✅ Order Details page
 import Shelf from "./pages/Shelf"; // ✅ Shelf page
 
 import { AuthProvider, useAuth } from "./contexts/AuthContext";
+import PdfViewer from "./components/PdfViewer";
 
 // Wrapper Component for Routes
 function ConditionalRoutes() {
@@ -91,6 +92,7 @@ function App() {
     <AuthProvider>
       <Router>
         <ConditionalRoutes />
+        <PdfViewer/>
       </Router>
     </AuthProvider>
   );
