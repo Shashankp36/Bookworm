@@ -17,6 +17,8 @@ const BookCard = ({ book }) => {
 
   const coverUrl = book.coverUrl?.trim() !== "" ? book.coverUrl : fallbackCover;
 
+  const showDiscount = book.discountedPrice !== null && book.discountedPrice < book.price;
+
   return (
     <div className="rounded-2xl p-4 shadow-md bg-[#e5e3df] text-black w-54 flex flex-col justify-between h-full">
       <div className="flex flex-col items-center space-y-3 flex-grow">
@@ -34,7 +36,7 @@ const BookCard = ({ book }) => {
       {/* Bottom Section: Price + Button */}
       <div className="mt-8 flex flex-col items-center">
         {/* Price Section */}
-        {book.discountedPrice && book.discountedPrice < book.price ? (
+        {showDiscount ? (
           <div className="flex items-center justify-center space-x-2 mb-3">
             <span className="line-through text-sm text-red-500">₹{book.price}</span>
             <span className="bg-black px-4 py-0.5 rounded text-sm font-bold text-white">
@@ -43,7 +45,7 @@ const BookCard = ({ book }) => {
           </div>
         ) : (
           <div className="flex justify-center mb-3">
-            <span className="bg-white text-black px-2 py-1 rounded text-sm font-semibold">
+            <span className="text-black px-2 py-1 rounded text-sm font-semibold">
               ₹{book.price}
             </span>
           </div>
