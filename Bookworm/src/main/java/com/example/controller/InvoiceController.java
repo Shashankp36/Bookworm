@@ -39,7 +39,7 @@ public class InvoiceController {
     	
     	int userId = sessionUserProvider.getCurrentUser().get().getUserId();
         List<OrderItemHistoryDTO> allHistory = orderHistoryService.getOrderHistoryByUserId(userId);
-        System.out.println(allHistory + "helllooooooooooooooooooooo");
+        System.out.println(allHistory);
         List<OrderItemHistoryDTO> filtered = allHistory.stream()
                 .filter(o -> o.getOrderId()== orderId)
                 .collect(Collectors.toList());

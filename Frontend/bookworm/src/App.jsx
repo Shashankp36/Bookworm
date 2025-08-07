@@ -74,6 +74,8 @@ function ConditionalRoutes() {
           }
         />
 
+
+
         {/* Fallback route */}
 
         <Route path="*" element={<Navigate to="/" replace />} />
@@ -88,17 +90,17 @@ function App() {
   return (
     <AuthProvider>
 
-  //    <CartProvider>
-     //   <Router>
-     //     <ConditionalRoutes />
-     //   </Router>
-    //  </CartProvider>
-//
-      <Router>
+      <CartProvider>
+        <Router>
+          <ConditionalRoutes />
+        </Router>
+      </CartProvider>
+
+      {/* <Router>
         <ConditionalRoutes />
         <PdfViewer/>
-      </Router>
-//
+      </Router> */}
+
     </AuthProvider>
   );
 }

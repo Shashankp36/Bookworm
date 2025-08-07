@@ -97,7 +97,7 @@
 // export default Shelf;
 
 import React, { useEffect, useState } from "react";
-import { differenceInDays, parseISO } from "date-fns";
+import { differenceInDays, differenceInHours, parseISO } from "date-fns";
 
 const Shelf = () => {
   const [purchasedItems, setPurchasedItems] = useState([]);
@@ -124,30 +124,31 @@ const Shelf = () => {
     fetchShelf();
   }, []);
 
-  const getDaysLeft = (endDate) => {
+  const getTimeLeft = (endDate) => {
     if (!endDate) return null;
-    const today = new Date();
+    const now = new Date();
     const end = parseISO(endDate);
-    const diff = differenceInDays(end, today);
-    return diff >= 0 ? diff : 0;
+    const totalHours = differenceInHours(end, now);
+    const days = Math.floor(totalHours / 24);
+    const hours = totalHours % 24;
+    return totalHours <= 0 ? "Expired" : `${days}d ${hours}h left`;
   };
 
-  // 🔗 Card wrapper: clickable if productUrl exists
   const ShelfCard = ({ item, isRental = false }) => {
-    const daysLeft = isRental ? getDaysLeft(item.rentalEndDate) : null;
+    const timeLeft = isRental ? getTimeLeft(item.rentalEndDate) : null;
+
     const cardContent = (
       <div className="bg-gray-50 rounded-lg p-4 shadow hover:shadow-xl hover:-translate-y-1 transition-transform duration-300">
         <div
-          className={`h-36 ${
-            isRental ? "bg-green-200" : "bg-blue-200"
-          } rounded mb-2 flex items-center justify-center text-white font-bold text-sm text-center px-2`}
+          className={`h-36 ${isRental ? "bg-green-200" : "bg-blue-200"
+            } rounded mb-2 flex items-center justify-center text-white font-bold text-sm text-center px-2`}
         >
           {item.productTitle}
         </div>
         <p className="text-sm text-gray-600 capitalize">{item.format}</p>
         {isRental && (
           <div className="mt-2 text-xs text-red-600 font-semibold">
-            {daysLeft} days left
+            {timeLeft}
           </div>
         )}
       </div>
@@ -176,21 +177,19 @@ const Shelf = () => {
         <div className="flex space-x-4 mb-6">
           <button
             onClick={() => setActiveTab("purchased")}
-            className={`px-4 py-2 rounded-full font-semibold transition ${
-              activeTab === "purchased"
+            className={`px-4 py-2 rounded-full font-semibold transition ${activeTab === "purchased"
                 ? "bg-blue-600 text-white"
                 : "bg-gray-200 text-gray-700"
-            }`}
+              }`}
           >
             Purchased
           </button>
           <button
             onClick={() => setActiveTab("rented")}
-            className={`px-4 py-2 rounded-full font-semibold transition ${
-              activeTab === "rented"
+            className={`px-4 py-2 rounded-full font-semibold transition ${activeTab === "rented"
                 ? "bg-green-600 text-white"
                 : "bg-gray-200 text-gray-700"
-            }`}
+              }`}
           >
             Rentals
           </button>

@@ -36,88 +36,47 @@ const AllProducts = ({ products = [] }) => {
     fetchMetaData();
   }, []);
 
-  // Watch for `products` prop update (initial fetch in parent)
+  // Initial product load
   useEffect(() => {
     setAllProducts(products);
     setFilteredProducts(products);
   }, [products]);
 
-  // Handle Language change
-  const handleLanguageChange = async (e) => {
+  // Trigger unified filter API
+  const applyFilters = async (lang, genre) => {
+    try {
+      const url = new URL("http://localhost:8080/api/products/filter");
+      if (lang) url.searchParams.append("language", lang);
+      if (genre) url.searchParams.append("genre", genre);
+
+      const res = await fetch(url.toString());
+      const data = await res.json();
+      setFilteredProducts(data);
+    } catch (err) {
+      console.error("Filtering failed:", err);
+    }
+  };
+
+  // Handle dropdown changes
+  const handleLanguageChange = (e) => {
     const lang = e.target.value;
     setSelectedLanguage(lang);
     setCurrentPage(1);
-
-    if (lang === "") {
-      // Reset filter
-      setFilteredProducts(
-        selectedGenre ? await fetchByGenre(selectedGenre) : allProducts
-      );
-      return;
-    }
-
-    try {
-      const res = await fetch(`http://localhost:8080/api/products/byLanguage/all?name=${encodeURIComponent(lang)}`);
-      const data = await res.json();
-      if (selectedGenre) {
-        // Further filter by genre if already selected
-        const filtered = data.filter(p => p.genre === selectedGenre);
-        setFilteredProducts(filtered);
-      } else {
-        setFilteredProducts(data);
-      }
-    } catch (err) {
-      console.error("Language filter failed:", err);
-    }
+    applyFilters(lang, selectedGenre);
   };
 
-  // Handle Genre change
-  const handleGenreChange = async (e) => {
+  const handleGenreChange = (e) => {
     const genre = e.target.value;
     setSelectedGenre(genre);
     setCurrentPage(1);
-
-    if (genre === "") {
-      // Reset filter
-      setFilteredProducts(
-        selectedLanguage ? await fetchByLanguage(selectedLanguage) : allProducts
-      );
-      return;
-    }
-
-    try {
-      const res = await fetch(`http://localhost:8080/api/products/byGenre/all?name=${encodeURIComponent(genre)}`);
-      const data = await res.json();
-      if (selectedLanguage) {
-        // Further filter by language if already selected
-        const filtered = data.filter(p => p.language === selectedLanguage);
-        setFilteredProducts(filtered);
-      } else {
-        setFilteredProducts(data);
-      }
-    } catch (err) {
-      console.error("Genre filter failed:", err);
-    }
-  };
-
-  // Helpers (to avoid code repetition)
-  const fetchByLanguage = async (lang) => {
-    const res = await fetch(`http://localhost:8080/api/products/byLanguage/all?name=${encodeURIComponent(lang)}`);
-    return await res.json();
-  };
-
-  const fetchByGenre = async (genre) => {
-    const res = await fetch(`http://localhost:8080/api/products/byGenre/all?name=${encodeURIComponent(genre)}`);
-    return await res.json();
+    applyFilters(selectedLanguage, genre);
   };
 
   return (
     <div className="px-6 py-12 bg-gray-900 text-white">
       {/* Title and Dropdowns Row */}
       <div className="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
-        <h2 className="text-2xl font-bold text-white">
-          📘 All Products
-        </h2>
+        <h2 className="text-2xl font-bold text-white">📘 All Products</h2>
 
         <div className="flex gap-4">
           {/* Language Dropdown */}
