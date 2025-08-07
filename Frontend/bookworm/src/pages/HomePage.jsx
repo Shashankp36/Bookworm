@@ -14,14 +14,14 @@ function HomePage() {
 
         const data = await res.json();
 
-        const formattedBooks = data.map((product) => ({
-          id: product.productId,
-          title: product.title,
-          author: product.author?.authorName,
-          image: product.coverUrl,
-        }));
+        // const formattedBooks = data.map((product) => ({
+        //   id: product.productId,
+        //   title: product.title,
+        //   author: product.author?.authorName,
+        //   image: product.coverUrl,
+        // }));
 
-        setAllBooks(formattedBooks);
+        setAllBooks(data);
       } catch (error) {
         console.error("Error fetching products:", error);
       }

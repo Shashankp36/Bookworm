@@ -18,46 +18,46 @@ const BookCard = ({ book }) => {
   const coverUrl = book.coverUrl?.trim() !== "" ? book.coverUrl : fallbackCover;
 
   return (
-    <div className="rounded-2xl p-4 shadow-md bg-[#e5e3df] text-black w-54 flex flex-col justify-between h-full">
-      <div className="flex flex-col items-center space-y-3 flex-grow">
-        <img
-          src={coverUrl}
-          alt={book.title}
-          className="h-42 w-28 object-cover rounded shadow-lg cursor-pointer"
-          onClick={handleViewDetails}
-        />
+   <div className="rounded-2xl p-4 shadow-md bg-[#e5e3df] text-black w-54 h-[360px] flex flex-col justify-between">
+  <div className="flex flex-col items-center space-y-3">
+    <img
+      src={coverUrl}
+      alt={book.title}
+      className="h-40 w-28 object-cover rounded shadow-lg cursor-pointer"
+      onClick={handleViewDetails}
+    />
 
-        <h3 className="text-lg font-bold text-center">{book.title}</h3>
-        <p className="text-sm font-medium text-center">{book.author?.authorName}</p>
+    <h3 className="text-sm font-bold text-center line-clamp-2">{book.title}</h3>
+    <p className="text-xs font-medium text-center text-gray-700 line-clamp-1">
+      {book.author?.authorName}
+    </p>
+  </div>
+
+  {/* Bottom Section: Price + Button */}
+  <div className="mt-4 flex flex-col items-center">
+    {book.discountedPrice && book.discountedPrice < book.price ? (
+      <div className="flex items-center justify-center space-x-2 mb-2">
+        <span className="line-through text-xs text-red-500">₹{book.price}</span>
+        <span className="bg-black px-2 py-0.5 rounded text-xs font-bold text-white">
+          ₹{book.discountedPrice}
+        </span>
       </div>
-
-      {/* Bottom Section: Price + Button */}
-      <div className="mt-8 flex flex-col items-center">
-        {/* Price Section */}
-        {book.discountedPrice && book.discountedPrice < book.price ? (
-          <div className="flex items-center justify-center space-x-2 mb-3">
-            <span className="line-through text-sm text-red-500">₹{book.price}</span>
-            <span className="bg-black px-4 py-0.5 rounded text-sm font-bold text-white">
-              ₹{book.discountedPrice}
-            </span>
-          </div>
-        ) : (
-          <div className="flex justify-center mb-3">
-            <span className="bg-white text-black px-2 py-1 rounded text-sm font-semibold">
-              ₹{book.price}
-            </span>
-          </div>
-        )}
-
-        {/* Add to Cart Button */}
-        <button
-          onClick={handleAddToCart}
-          className="bg-green-600 hover:bg-green-700 text-white px-6 py-2 text-sm rounded w-full"
-        >
-          Add to Cart
-        </button>
+    ) : (
+      <div className="flex justify-center mb-2">
+        <span className="bg-white text-black px-2 py-1 rounded text-sm font-semibold">
+          ₹{book.price}
+        </span>
       </div>
-    </div>
+    )}
+
+    <button
+      onClick={handleAddToCart}
+      className="bg-green-600 hover:bg-green-700 text-white px-4 py-1 text-sm rounded w-full"
+    >
+      Add to Cart
+    </button>
+  </div>
+</div>
   );
 };
 
