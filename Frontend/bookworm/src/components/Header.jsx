@@ -1,20 +1,23 @@
 import React, { useEffect, useRef } from "react";
-import { Link, NavLink, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
 import Logout from "./Logout";
 import LowerHeader from "./lowerHeader";
-import { Menu, LogOut, Phone, ShoppingCart } from "lucide-react"; // Lucide icons
+import { Phone, ShoppingCart } from "lucide-react";
 import CustomNavLink from "../components/CustomNavlink";
 
-// Avatar with first letter of name
-const UserAvatar = ({ user }) => (
-  <div
-    className="rounded-full w-9 h-9 flex items-center justify-center font-bold uppercase cursor-pointer 
-               bg-[#b7a680] text-white hover:bg-[#8a6c3a] transition-colors duration-300"
-  >
-    {user?.name ? user.name[0] : "U"}
-  </div>
-);
+// Avatar with first letter of user name
+const UserAvatar = ({ user }) => {
+  const firstLetter = user?.name?.trim()?.charAt(0)?.toUpperCase() || "U";
+  return (
+    <div
+      className="rounded-full w-9 h-9 flex items-center justify-center font-bold uppercase cursor-pointer 
+                 bg-[#b7a680] text-white hover:bg-[#8a6c3a] transition-colors duration-300"
+    >
+      {firstLetter}
+    </div>
+  );
+};
 
 const Header = () => {
   const { isLoggedIn, user } = useAuth();
@@ -24,7 +27,6 @@ const Header = () => {
 
   const toggleDropdown = () => setShowDropdown((prev) => !prev);
 
-  // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -56,18 +58,18 @@ const Header = () => {
           <CustomNavLink to="/shelf">MyShelf</CustomNavLink>
         </nav>
 
-        {/* Right Side - Buttons and Avatar */}
+        {/* Right Side - Cart + Avatar */}
         <div className="flex items-center gap-4 relative">
-          <>
-            {/* Cart Icon with hover */}
-            <Link
-              to="/cart"
-              className="relative ml-2 mr-2 p-2 rounded-md hover:bg-[#b7a680] transition-colors duration-200"
-            >
-              <ShoppingCart className="w-6 h-6 text-[#2d2c2a]" />
-            </Link>
+          {/* Cart */}
+          <Link
+            to="/cart"
+            className="relative ml-2 mr-2 p-2 rounded-md hover:bg-[#b7a680] transition-colors duration-200"
+          >
+            <ShoppingCart className="w-6 h-6 text-[#2d2c2a]" />
+          </Link>
 
-            {/* Avatar + Dropdown */}
+          {/* Avatar + Dropdown */}
+          {isLoggedIn && (
             <div className="relative ml-2 mr-2" ref={dropdownRef}>
               <div onClick={toggleDropdown}>
                 <UserAvatar user={user} />
@@ -75,7 +77,7 @@ const Header = () => {
 
               {showDropdown && (
                 <div className="absolute right-0 mt-2 w-44 bg-white shadow-lg border rounded-md overflow-hidden z-50">
-                  {/* About Us with hover */}
+                  {/* About Us */}
                   <Link
                     to="/about"
                     className="flex items-center gap-2 px-4 py-2 hover:bg-gray-100 text-[#2d2c2a] transition-colors duration-200"
@@ -83,17 +85,16 @@ const Header = () => {
                     <Phone className="w-4 h-4" /> About Us
                   </Link>
 
-                  {/* Logout button with hover (update inside component if needed) */}
+                  {/* Logout */}
                   <Logout />
                 </div>
               )}
             </div>
-          </>
+          )}
         </div>
       </div>
       <LowerHeader />
     </header>
-    
   );
 };
 
