@@ -17,6 +17,8 @@ const BookCard = ({ book }) => {
 
   const coverUrl = book.coverUrl?.trim() !== "" ? book.coverUrl : fallbackCover;
 
+  const showDiscount = book.discountedPrice !== null && book.discountedPrice < book.price;
+
   return (
    <div className="rounded-2xl p-4 shadow-md bg-[#e5e3df] text-black w-54 h-[360px] flex flex-col justify-between">
   <div className="flex flex-col items-center space-y-3">

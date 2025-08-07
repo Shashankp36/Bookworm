@@ -6,7 +6,7 @@ import About_us from "./pages/About_us";
 import Footer from "./pages/Footer";
 import Ebook from "./pages/Ebook";
 import Audiobook from "./pages/Audiobook";
-import ProductDetail from './components/ProductDetail'; // ✅ Product detail page
+import ProductDetail from './pages/ProductDetail'; // ✅ Product detail page
 import Header from "./components/Header";
 import Orders from "./components/Orders"; // ✅ My Orders page
 import OrderDetails from "./components/OrderDetails"; // ✅ Order Details page
