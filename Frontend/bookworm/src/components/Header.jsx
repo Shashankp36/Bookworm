@@ -12,8 +12,10 @@ export const ProductContext = React.createContext(); // ✅ Context to pass down
 const UserAvatar = ({ user }) => {
   const firstLetter = user?.name?.trim()?.charAt(0)?.toUpperCase() || "U";
   return (
-    <div className="rounded-full w-9 h-9 flex items-center justify-center font-bold uppercase cursor-pointer 
-                 bg-[#b7a680] text-white hover:bg-[#8a6c3a] transition-colors duration-300">
+    <div
+      className="rounded-full w-9 h-9 flex items-center justify-center font-bold uppercase cursor-pointer 
+                 bg-[#b7a680] text-white hover:bg-[#8a6c3a] transition-colors duration-300"
+    >
       {firstLetter}
     </div>
   );

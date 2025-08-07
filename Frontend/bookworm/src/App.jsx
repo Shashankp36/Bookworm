@@ -10,6 +10,7 @@ import ProductDetail from './components/ProductDetail'; // ✅ Product detail pa
 import Header from "./components/Header";
 import Orders from "./components/Orders"; // ✅ My Orders page
 import OrderDetails from "./components/OrderDetails"; // ✅ Order Details page
+import Shelf from "./pages/Shelf"; // ✅ Shelf page
 
 import { AuthProvider, useAuth } from "./contexts/AuthContext";
 
@@ -45,6 +46,7 @@ function ConditionalRoutes() {
 
         {/* ✅ Public About Us page */}
         <Route path="/about" element={<About_us />} />
+        <Route path="/shelf" element={<Shelf />} />
 
         {/* ✅ eBooks page */}
         <Route path="/ebooks" element={<Ebook />} />
