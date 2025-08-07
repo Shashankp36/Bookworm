@@ -39,14 +39,8 @@ public class ProductController {
     }
 
     // Get product by ID
-    @GetMapping("/{id}")
-    public ResponseEntity<Product> getProductById(@PathVariable int id) {
-        Optional<Product> product = productService.getProductById(id);
-        return product.map(ResponseEntity::ok)
-                      .orElse(ResponseEntity.notFound().build());
-    }
 
-    // Create productss
+    // Create products
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
     public Product createProduct(@RequestBody Product product) {
@@ -57,69 +51,47 @@ public class ProductController {
     
     
 
-    // Update product
-    @PutMapping("/{id}")
-    public ResponseEntity<Product> updateProduct(@PathVariable int id, @RequestBody Product product) {
-        Optional<Product> existing = productService.getProductById(id);
-        if (existing.isEmpty()) {
-            return ResponseEntity.notFound().build();
-        }
+  
 
-        product.setProductId(id);
-        return ResponseEntity.ok(productService.saveProduct(product));
-    }
-
-    // Delete product
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteProduct(@PathVariable int id) {
-        Optional<Product> existing = productService.getProductById(id);
-        if (existing.isEmpty()) {
-            return ResponseEntity.notFound().build();
-        }
-
-        productService.deleteProduct(id);
-        return ResponseEntity.noContent().build();
-    }
-
-    @GetMapping("/byGenre")
+    @GetMapping("/byGenre/all")
     public ResponseEntity<List<Product>> getByGenre(@RequestParam String name) {
         return ResponseEntity.ok(productService.findByGenreName(name));
     }
 
     // Get products by language
-    @GetMapping("/byLanguage")
+    @GetMapping("/byLanguage/all")
     public ResponseEntity<List<Product>> getByLanguage(@RequestParam String name) {
         return ResponseEntity.ok(productService.findByLanguageName(name));
     }
 
     // Get products by author
-    @GetMapping("/byAuthor")
+    @GetMapping("/byAuthor/all")
     public ResponseEntity<List<Product>> getByAuthor(@RequestParam String name) {
         return ResponseEntity.ok(productService.findByAuthorName(name));
     }
 
     // Get products by format
-    @GetMapping("/by-format")
+    @GetMapping("/byFormat/all")
     public ResponseEntity<List<Product>> getByFormat(@RequestParam String name) {
         return ResponseEntity.ok(productService.findByFormatName(name));
     }
 
     // Get products by publisher
-    @GetMapping("/byPublisher")
+    @GetMapping("/byPublisher/all")
     public ResponseEntity<List<Product>> getByPublisher(@RequestParam String name) {
         return ResponseEntity.ok(productService.findByPublisherName(name));
     }
     
     @GetMapping("/search")
     public ResponseEntity<List<Product>> searchProducts(
-            @RequestParam(required = false) String title,
-            @RequestParam(required = false) String author,
-            @RequestParam(required = false) String language,
-            @RequestParam(required = false) String genre,
-            @RequestParam(required = false) String format,
-            @RequestParam(required = false) String publisher
+            @RequestParam(required = false) String Title,
+            @RequestParam(required = false) String Author,
+            @RequestParam(required = false) String Language,
+            @RequestParam(required = false) String Genre,
+            @RequestParam(required = false) String Format,
+            @RequestParam(required = false) String Publisher
     ) {
-        List<Product> products = productService.searchProducts(title, author, language, genre, format, publisher);
+        List<Product> products = productService.searchProducts(Title, Author, Language, Genre, Format, Publisher);
 
         if (products.isEmpty()) {
             return ResponseEntity.noContent().build();
@@ -166,6 +138,45 @@ public class ProductController {
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(products);
+    }
+
+    // Update product
+    @PutMapping("/{id}")
+    public ResponseEntity<Product> updateProduct(@PathVariable int id, @RequestBody Product product) {
+        Optional<Product> existing = productService.getProductById(id);
+        if (existing.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        product.setProductId(id);
+        return ResponseEntity.ok(productService.saveProduct(product));
+    }
+
+    // Delete product
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteProduct(@PathVariable int id) {
+        Optional<Product> existing = productService.getProductById(id);
+        if (existing.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        productService.deleteProduct(id);
+        return ResponseEntity.noContent().build();
+    }
+    
+    @GetMapping("/{id}")
+    public ResponseEntity<Product> getProductById(@PathVariable int id) {
+        Optional<Product> product = productService.getProductById(id);
+        return product.map(ResponseEntity::ok)
+                      .orElse(ResponseEntity.notFound().build());
+    }
+
+    @GetMapping("/filter")
+    public ResponseEntity<List<Product>> filterByLanguageAndGenre(
+            @RequestParam(required = false) String language,
+            @RequestParam(required = false) String genre) {
+        List<Product> filteredProducts = productService.filterByLanguageAndGenre(language, genre);
+        return ResponseEntity.ok(filteredProducts);
     }
 
     

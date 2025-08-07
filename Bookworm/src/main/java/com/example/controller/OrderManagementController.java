@@ -1,14 +1,19 @@
 package com.example.controller;
 
+import com.example.configuration.SessionUserProvider;
+
+
 import com.example.model.*;
 import com.example.service.*;
 
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/orders")
@@ -18,6 +23,10 @@ public class OrderManagementController {
     @Autowired private IOrderDetailService orderDetailService;
     @Autowired private IUser userService;
     @Autowired private IProduct productService;
+    
+
+    @Autowired
+    private SessionUserProvider provider;
 
     // 1. Create or update an Order
     @PostMapping
@@ -34,7 +43,7 @@ public class OrderManagementController {
     // 3. Get Order by ID (checks user ownership)
     @GetMapping("/{orderId}")
     public Order getOrderById(@PathVariable int orderId, HttpSession session) {
-        int userId = (int) session.getAttribute("userId");
+        int userId = provider.getCurrentUser().get().getUserId();
         Optional<Order> orderOpt = orderService.getOrderById(orderId);
 
         if (orderOpt.isPresent() && orderOpt.get().getUser().getUserId() == userId) {
@@ -44,12 +53,12 @@ public class OrderManagementController {
     }
 
     // 4. Get Orders for current logged-in user
-    @GetMapping("/user")
-    public List<Order> getOrdersForLoggedInUser(HttpSession session) {
-        int userId = (int) session.getAttribute("userId");
-        Optional<User> userOpt = userService.getUserById(userId);
-        return userOpt.map(orderService::getOrdersByUser).orElseThrow(() -> new RuntimeException("User not found"));
-    }
+//    @GetMapping("/user")
+//    public List<Order> getOrdersForLoggedInUser() {
+//    	int userId = provider.getCurrentUser().get().getUserId();
+//        Optional<User> userOpt = userService.getUserById(userId);
+//        return userOpt.map(orderService::getOrdersByUser).orElseThrow(() -> new RuntimeException("User not found"));
+//    }
 
     // 5. Delete Order by ID (admin or internal use)
     @DeleteMapping("/{orderId}")
@@ -134,4 +143,10 @@ public class OrderManagementController {
 
         throw new RuntimeException("Unauthorized or order not found.");
     }
+    
+   // Or repository if you prefer
+
+
+
+
 }

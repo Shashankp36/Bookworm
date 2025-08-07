@@ -41,6 +41,7 @@ public class SecurityConfig {
             )
             .exceptionHandling(ex -> ex
                 .authenticationEntryPoint((req, res, e) ->
+                
                     res.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized")
                 )
             )

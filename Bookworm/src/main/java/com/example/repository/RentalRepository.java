@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.example.model.Product;
+import com.example.model.Purchase;
 import com.example.model.Rental;
 import com.example.model.User;
 

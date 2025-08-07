@@ -193,6 +193,38 @@ public class ProductService implements IProduct {
         Sort sort = sortDir.equalsIgnoreCase("desc") ? Sort.by(sortBy).descending() : Sort.by(sortBy).ascending();
         return productRepository.findAll(sort);
     }
+    
+    
+  
+
+    @Override
+    public List<Product> filterByLanguageAndGenre(String languageName, String genreName) {
+        Language language = null;
+        Genre genre = null;
+
+        if (languageName != null && !languageName.isBlank()) {
+            language = languageRepository.findByLanguageNameIgnoreCase(languageName)
+                    .orElseThrow(() -> new IllegalArgumentException("Invalid language: " + languageName));
+        }
+
+        if (genreName != null && !genreName.isBlank()) {
+            genre = genreRepository.findByGenreNameIgnoreCase(genreName)
+                    .orElseThrow(() -> new IllegalArgumentException("Invalid genre: " + genreName));
+        }
+
+        // Handle all filter combinations
+        if (language != null && genre != null) {
+            return productRepository.findByLanguageAndGenre(language, genre);
+        } else if (language != null) {
+            return productRepository.findByLanguage(language);
+        } else if (genre != null) {
+            return productRepository.findByGenre(genre);
+        } else {
+            return productRepository.findAll();
+        }
+    }
+}
+
 
     
-}
+    

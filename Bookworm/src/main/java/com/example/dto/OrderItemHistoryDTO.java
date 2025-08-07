@@ -103,6 +103,7 @@ public class OrderItemHistoryDTO {
 		this.rentalEnd = rentalEnd;
 	}
 
+
 	@Override
 	public String toString() {
 		return "OrderItemHistoryDTO [orderId=" + orderId + ", productId=" + productId + ", productType=" + productType

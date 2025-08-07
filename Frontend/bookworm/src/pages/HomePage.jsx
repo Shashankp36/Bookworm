@@ -1,11 +1,42 @@
-import HomeCarousal from '../components/HomeCarousal';
-import PopularBooks from '../components/PopularBooks';
+import { useEffect, useState } from "react";
+import HomeCarousal from "../components/HomeCarousal";
+import PopularBooks from "../components/PopularBooks";
+import AllProducts from "../components/AllProducts.jsx"; // new import
 
 function HomePage() {
+  const [allBooks, setAllBooks] = useState([]);
+
+  useEffect(() => {
+    const fetchBooks = async () => {
+      try {
+        const res = await fetch("http://localhost:8080/api/products/");
+        if (!res.ok) throw new Error("Failed to fetch books");
+
+        const data = await res.json();
+
+        // const formattedBooks = data.map((product) => ({
+        //   id: product.productId,
+        //   title: product.title,
+        //   author: product.author?.authorName,
+        //   image: product.coverUrl,
+        // }));
+
+        setAllBooks(data);
+      } catch (error) {
+        console.error("Error fetching products:", error);
+      }
+    };
+
+    fetchBooks();
+  }, []);
+
   return (
-    <div className="bg-gray-900 min-h-screen text-white">
+    <div className="bg-white min-h-screen p-3">
+    <div className="bg-gray-900 min-h-screen text-white pt-24 px-6">
       <HomeCarousal />
-      <PopularBooks/>
+      <PopularBooks books={allBooks.slice(0, 6)} />
+      <AllProducts products={allBooks} />
+    </div>
     </div>
   );
 }
