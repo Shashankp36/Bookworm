@@ -84,14 +84,14 @@ public class ProductController {
     
     @GetMapping("/search")
     public ResponseEntity<List<Product>> searchProducts(
-            @RequestParam(required = false) String title,
-            @RequestParam(required = false) String author,
-            @RequestParam(required = false) String language,
-            @RequestParam(required = false) String genre,
-            @RequestParam(required = false) String format,
-            @RequestParam(required = false) String publisher
+            @RequestParam(required = false) String Title,
+            @RequestParam(required = false) String Author,
+            @RequestParam(required = false) String Language,
+            @RequestParam(required = false) String Genre,
+            @RequestParam(required = false) String Format,
+            @RequestParam(required = false) String Publisher
     ) {
-        List<Product> products = productService.searchProducts(title, author, language, genre, format, publisher);
+        List<Product> products = productService.searchProducts(Title, Author, Language, Genre, Format, Publisher);
 
         if (products.isEmpty()) {
             return ResponseEntity.noContent().build();
@@ -171,4 +171,13 @@ public class ProductController {
                       .orElse(ResponseEntity.notFound().build());
     }
 
+    @GetMapping("/filter")
+    public ResponseEntity<List<Product>> filterByLanguageAndGenre(
+            @RequestParam(required = false) String language,
+            @RequestParam(required = false) String genre) {
+        List<Product> filteredProducts = productService.filterByLanguageAndGenre(language, genre);
+        return ResponseEntity.ok(filteredProducts);
+    }
+
+    
 }

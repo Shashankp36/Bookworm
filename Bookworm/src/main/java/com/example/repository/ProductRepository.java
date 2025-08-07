@@ -5,6 +5,8 @@ import java.math.BigDecimal;
 import java.util.*;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 public interface ProductRepository extends JpaRepository<Product, Integer> {
 	
@@ -34,5 +36,12 @@ public interface ProductRepository extends JpaRepository<Product, Integer> {
 	    
 	    List<Product> findByPublisher_PublisherNameIgnoreCase(String publisherName);
 
-	
+	    @Query("SELECT p FROM Product p WHERE (:language IS NULL OR p.language = :language) AND (:genre IS NULL OR p.genre.genreName = :genre)")
+	    List<Product> findByLanguageAndGenre(@Param("language") String language, @Param("genre") String genre);
+
+		List<Product> findByLanguageAndGenre(Language language, Genre genre);
+
+		List<Product> findByLanguage(Language language);
+
+		List<Product> findByGenre(Genre genre);
 }

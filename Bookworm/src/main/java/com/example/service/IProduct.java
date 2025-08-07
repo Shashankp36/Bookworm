@@ -39,5 +39,9 @@ public interface IProduct {
     public List<Product> searchProducts(String title, String author, String language, String genre, String format, String publisher);
     
     public List<Product> getAllProductsSorted(String sortBy, String sortDir);
+    
+    List<Product> filterByLanguageAndGenre(String language, String genre) ;
+    
 
+    
 }
