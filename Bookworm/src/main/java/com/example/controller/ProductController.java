@@ -46,7 +46,7 @@ public class ProductController {
                       .orElse(ResponseEntity.notFound().build());
     }
 
-    // Create productss
+    // Create products
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
     public Product createProduct(@RequestBody Product product) {
