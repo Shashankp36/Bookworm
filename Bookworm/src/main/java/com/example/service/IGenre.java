@@ -9,4 +9,5 @@ public interface IGenre {
     Optional<Genre> getGenreById(int id);
     List<Genre> getAllGenres();
     void deleteGenre(int id);
+    
 }

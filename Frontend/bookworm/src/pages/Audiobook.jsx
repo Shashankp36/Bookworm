@@ -21,14 +21,14 @@ const Audiobook = () => {
             product.format.formatName.toLowerCase() === "audiobook"
         );
 
-        const formatted = filtered.map((product) => ({
-          id: product.productId,
-          title: product.title,
-          author: product.author?.authorName,
-          image: product.coverUrl,
-        }));
+        // const formatted = filtered.map((product) => ({
+        //   id: product.productId,
+        //   title: product.title,
+        //   author: product.author?.authorName,
+        //   image: product.coverUrl,
+        // }));
 
-        setAudiobooks(formatted);
+        setAudiobooks(filtered);
       } catch (err) {
         setError(err.message);
       } finally {

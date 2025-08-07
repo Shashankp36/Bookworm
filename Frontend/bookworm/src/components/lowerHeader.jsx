@@ -1,32 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 const LowerHeader = () => {
-  const [languages, setLanguages] = useState([]);
-  const [genres, setGenres] = useState([]);
-
-  // Fetch languages and genres on mount
-  useEffect(() => {
-    const fetchMetaData = async () => {
-      try {
-        const [langRes, genreRes] = await Promise.all([
-          fetch('http://localhost:8080/api/meta/languages'),
-          fetch('http://localhost:8080/api/meta/genres'),
-        ]);
-
-        const langs = await langRes.json();
-        const genres = await genreRes.json();
-
-        setLanguages(langs);
-        setGenres(genres);
-      } catch (error) {
-        console.error('Error fetching metadata:', error);
-      }
-    };
-
-    fetchMetaData();
-  }, []);
-
   return (
     <div className="w-100 bg-light border-bottom shadow-sm py-2 px-3">
       <div className="container-fluid d-flex flex-wrap justify-content-between align-items-center gap-2">
@@ -49,52 +24,6 @@ const LowerHeader = () => {
           </div>
         </div>
 
-        {/* Dropdowns */}
-        <div className="d-flex gap-2">
-
-          {/* Language Dropdown */}
-          <div className="position-relative">
-            <select
-              className="form-select rounded-pill px-3 py-1 shadow-sm border-secondary"
-              style={{
-                minWidth: '130px',
-                fontSize: '0.85rem',
-                backgroundColor: '#fff',
-                cursor: 'pointer',
-              }}
-              defaultValue=""
-            >
-              <option disabled value="">Languages</option>
-              {languages.map((lang) => (
-                <option key={lang.languageId} value={lang.languageName}>
-                  {lang.languageName}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          {/* Genre Dropdown */}
-          <div className="position-relative">
-            <select
-              className="form-select rounded-pill px-3 py-1 shadow-sm border-secondary"
-              style={{
-                minWidth: '130px',
-                fontSize: '0.85rem',
-                backgroundColor: '#fff',
-                cursor: 'pointer',
-              }}
-              defaultValue=""
-            >
-              <option disabled value="">Genres</option>
-              {genres.map((genre) => (
-                <option key={genre.genreId} value={genre.genreName}>
-                  {genre.genreName}
-                </option>
-              ))}
-            </select>
-          </div>
-
-        </div>
       </div>
     </div>
   );

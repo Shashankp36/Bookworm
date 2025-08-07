@@ -11,6 +11,7 @@ import java.util.List;
 
 public interface PurchaseRepository extends JpaRepository<Purchase, Integer> {
 	List<Purchase> findByUserUserId(int userId);
+	
 
 	List<Purchase> findByProductProductId(int productId);
 	

@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 
 import React, { useEffect, useState } from 'react';
 import BookCard from './BookCard';
@@ -21,6 +22,10 @@ const PopularBooks = () => {
     fetchBooks();
   }, []);
 
+=======
+import React from "react";
+import BookCard from "./BookCard";
+>>>>>>> 6cfc14d8e5f555779244b85eb85421b9d2dad25b
 
 const PopularBooks = ({ books = [] }) => {
   return (
