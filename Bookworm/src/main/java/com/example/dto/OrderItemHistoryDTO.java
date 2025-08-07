@@ -6,6 +6,11 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
+import com.example.model.Product;
+import com.example.service.IProduct;
+
 public class OrderItemHistoryDTO {
 
     private int orderId;
@@ -14,14 +19,24 @@ public class OrderItemHistoryDTO {
     private BigDecimal pricePaid;
     private LocalDateTime purchaseDate; // for purchase
     private LocalDate rentalStart;      // for rental
-    private LocalDate rentalEnd;        // for rental
+    private LocalDate rentalEnd;  
+    private ProductDTO product;
+    
+ 
+    public ProductDTO getProduct() {
+		return product;
+	}
 
-    // Constructors
+	public void setProduct(ProductDTO product) {
+		this.product = product;
+	}
+
+	// Constructors
     public OrderItemHistoryDTO() {}
 
     public OrderItemHistoryDTO(int orderId, int productId, String productType,
                                BigDecimal pricePaid, LocalDateTime purchaseDate,
-                               LocalDate rentalStart, LocalDate rentalEnd) {
+                               LocalDate rentalStart, LocalDate rentalEnd,ProductDTO product) {
         this.orderId = orderId;
         this.productId = productId;
         this.productType = productType;
@@ -29,6 +44,7 @@ public class OrderItemHistoryDTO {
         this.purchaseDate = purchaseDate;
         this.rentalStart = rentalStart;
         this.rentalEnd = rentalEnd;
+        this.product=product;
     }
 
 	public int getOrderId() {
