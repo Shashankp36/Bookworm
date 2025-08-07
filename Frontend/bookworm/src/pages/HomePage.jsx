@@ -31,10 +31,16 @@ function HomePage() {
   }, []);
 
   return (
-    <div className="bg-gray-900 min-h-screen text-white">
+    <div className="bg-white min-h-screen p-3">
+    <div className="bg-gray-900 min-h-screen text-white pt-24 px-6">
       <HomeCarousal />
+<<<<<<< HEAD
       <PopularBooks books={allBooks.slice(0, 6)} />
       <AllProducts products={allBooks} />
+=======
+      <PopularBooks />
+    </div>
+>>>>>>> ebedd39 (Added Book Details)
     </div>
   );
 }
