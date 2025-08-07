@@ -8,6 +8,8 @@ import Ebook from "./pages/Ebook";
 import Audiobook from "./pages/Audiobook";
 import ProductDetail from './components/ProductDetail'; // ✅ Product detail page
 import Header from "./components/Header";
+import Orders from "./components/Orders"; // ✅ My Orders page
+import OrderDetails from "./components/OrderDetails"; // ✅ Order Details page
 
 import { AuthProvider, useAuth } from "./contexts/AuthContext";
 
@@ -32,17 +34,13 @@ function ConditionalRoutes() {
         {/* Home Route - Only for Logged In */}
         <Route
           path="/home"
-          element={
-            isLoggedIn ? <HomePage /> : <Navigate to="/" replace />
-          }
+          element={isLoggedIn ? <HomePage /> : <Navigate to="/" replace />}
         />
 
         {/* Login Route - Only when NOT logged in */}
         <Route
           path="/login"
-          element={
-            isLoggedIn ? <Navigate to="/home" replace /> : <Login />
-          }
+          element={isLoggedIn ? <Navigate to="/home" replace /> : <Login />}
         />
 
         {/* ✅ Public About Us page */}
@@ -59,6 +57,20 @@ function ConditionalRoutes() {
           path="/product/:id"
           element={
             isLoggedIn ? <ProductDetail /> : <Navigate to="/login" replace />
+          }
+        />
+
+        {/* ✅ My Orders route */}
+        <Route
+          path="/orders"
+          element={isLoggedIn ? <Orders /> : <Navigate to="/login" replace />}
+        />
+
+        {/* ✅ Order Details route */}
+        <Route
+          path="/orders/:orderId"
+          element={
+            isLoggedIn ? <OrderDetails /> : <Navigate to="/login" replace />
           }
         />
 

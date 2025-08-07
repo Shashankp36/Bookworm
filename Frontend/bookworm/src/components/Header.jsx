@@ -93,6 +93,13 @@ const Header = () => {
                     >
                       <Phone className="w-4 h-4" /> About Us
                     </Link>
+                    {/* My Orders */}
+                    <Link
+                      to="/orders"
+                      className="flex items-center gap-2 px-4 py-2 hover:bg-gray-100 text-[#2d2c2a] transition-colors duration-200"
+                    >
+                      📦 My Orders
+                    </Link>
                     <Logout />
                   </div>
                 )}
@@ -102,7 +109,6 @@ const Header = () => {
         </div>
         <LowerHeader />
       </header>
-
       <Outlet /> {/* ✅ All child routes can now use ProductContext */}
     </ProductContext.Provider>
   );
