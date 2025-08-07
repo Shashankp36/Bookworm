@@ -40,7 +40,7 @@ public class ProductController {
 
     // Get product by ID
 
-    // Create productss
+    // Create products
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
     public Product createProduct(@RequestBody Product product) {

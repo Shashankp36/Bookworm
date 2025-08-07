@@ -4,7 +4,8 @@ const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const logoutTimerRef = useRef(null); // to clear timeout on logout/login
+  const [user, setUser] = useState(null);
+  const logoutTimerRef = useRef(null);
 
   // Helper to decode JWT
   const decodeJWT = (token) => {
@@ -19,6 +20,7 @@ export const AuthProvider = ({ children }) => {
 
   const logoutUser = () => {
     setIsLoggedIn(false);
+    setUser(null);
     localStorage.removeItem("accessToken");
     localStorage.removeItem("refreshToken");
     localStorage.removeItem("role");
@@ -42,12 +44,13 @@ export const AuthProvider = ({ children }) => {
       const timeout = expiry - now;
 
       if (timeout > 0) {
+        setUser(payload);
         logoutTimerRef.current = setTimeout(logoutUser, timeout);
       } else {
         logoutUser();
       }
     } else {
-      logoutUser(); // invalid token
+      logoutUser();
     }
   };
 
@@ -62,15 +65,16 @@ export const AuthProvider = ({ children }) => {
 
         if (timeout > 0) {
           setIsLoggedIn(true);
+          setUser(payload);
           logoutTimerRef.current = setTimeout(logoutUser, timeout);
         } else {
-          logoutUser(); // token expired
+          logoutUser();
         }
       } else {
-        logoutUser(); // invalid token
+        logoutUser();
       }
     }
-    // Cleanup on unmount
+
     return () => {
       if (logoutTimerRef.current) {
         clearTimeout(logoutTimerRef.current);
@@ -79,7 +83,7 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ isLoggedIn, loginUser, logoutUser }}>
+    <AuthContext.Provider value={{ isLoggedIn, user, loginUser, logoutUser }}>
       {children}
     </AuthContext.Provider>
   );
