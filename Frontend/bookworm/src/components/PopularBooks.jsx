@@ -5,26 +5,21 @@ const PopularBooks = () => {
   const [books, setBooks] = useState([]);
 
   useEffect(() => {
-    const fetchBooks = async () => {
-      try {
-        const res = await fetch('http://localhost:8080/api/products/');
-        if (!res.ok) throw new Error("Failed to fetch books");
-        const data = await res.json();
-        const topSix = data.slice(0, 6);
-        const formattedBooks = topSix.map((product) => ({
-          id: product.productId,
-          title: product.title,
-          author: product.author?.authorName,
-          image: product.coverUrl,
-        }));
-        setBooks(formattedBooks);
-      } catch (error) {
-        console.error("Error fetching products:", error);
-      }
-    };
+  const fetchBooks = async () => {
+    try {
+      const res = await fetch('http://localhost:8080/api/products/');
+      if (!res.ok) throw new Error("Failed to fetch books");
+      const data = await res.json();
+      const topSix = data.slice(0, 6);
+      setBooks(topSix); // Keep full product structure
+    } catch (error) {
+      console.error("Error fetching products:", error);
+    }
+  };
 
-    fetchBooks();
-  }, []);
+  fetchBooks();
+}, []);
+
 
   return (
     <div className="px-6 py-12 bg-gray-900">
