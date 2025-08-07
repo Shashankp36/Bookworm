@@ -21,14 +21,14 @@ const Ebook = () => {
             product.format.formatName.toLowerCase() === "ebook"
         );
 
-        const formatted = filtered.map((product) => ({
-          id: product.productId,
-          title: product.title,
-          author: product.author?.authorName,
-          image: product.coverUrl,
-        }));
+        // const formatted = filtered.map((product) => ({
+        //   id: product.productId,
+        //   title: product.title,
+        //   author: product.author?.authorName,
+        //   image: product.coverUrl,
+        // }));
 
-        setEbooks(formatted);
+        setEbooks(filtered);
       } catch (err) {
         setError(err.message);
       } finally {
