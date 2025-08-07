@@ -44,40 +44,11 @@ const BookCard = ({ book }) => {
           ₹{book.discountedPrice}
         </span>
       </div>
-<<<<<<< HEAD
-
-      {/* Bottom Section: Price + Button */}
-      <div className="mt-8 flex flex-col items-center">
-        {/* Price Section */}
-        {showDiscount ? (
-          <div className="flex items-center justify-center space-x-2 mb-3">
-            <span className="line-through text-sm text-red-500">₹{book.price}</span>
-            <span className="bg-black px-4 py-0.5 rounded text-sm font-bold text-white">
-              ₹{book.discountedPrice}
-            </span>
-          </div>
-        ) : (
-          <div className="flex justify-center mb-3">
-            <span className="text-black px-2 py-1 rounded text-sm font-semibold">
-              ₹{book.price}
-            </span>
-          </div>
-        )}
-
-        {/* Add to Cart Button */}
-        <button
-          onClick={handleAddToCart}
-          className="bg-green-600 hover:bg-green-700 text-white px-6 py-2 text-sm rounded w-full"
-        >
-          Add to Cart
-        </button>
-=======
     ) : (
       <div className="flex justify-center mb-2">
         <span className="bg-white text-black px-2 py-1 rounded text-sm font-semibold">
           ₹{book.price}
         </span>
->>>>>>> 6cfc14d8e5f555779244b85eb85421b9d2dad25b
       </div>
     )}
 
