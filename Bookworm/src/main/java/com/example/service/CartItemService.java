@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.example.dto.AddCartItemRequest;
 import com.example.model.Cart;
@@ -40,9 +41,12 @@ public class CartItemService implements ICartItemService {
     }
 
     @Override
-    public void deleteCartItem(int productId , int cartId) {
-        cartItemRepository.deleteByCartIdAndProductId(productId,cartId);
+    @Transactional
+    public void deleteCartItem(int productId, int cartId) {
+        System.out.println("Deleting product " + productId + " from cart " + cartId);
+        cartItemRepository.deleteByCartIdAndProductId(cartId, productId);
     }
+
 
     @Override
     public void clearCart(int cartId) {
