@@ -44,7 +44,7 @@ public class AuthController {
     private IRentalService rentalService;
 
     @Autowired
-    public AuthController(UserService userService, ShelfService shelfService, CartService cartService, RentalService rentalService_1) {
+    public AuthController(IUser userService, ShelfService shelfService, CartService cartService, RentalService rentalService_1) {
         this.userService = userService;
         this.shelfService = shelfService;
         this.cartService = cartService;
@@ -93,7 +93,7 @@ public class AuthController {
 
         Optional<User> userOpt = userService.getUserByEmail(request.getEmail());
 
-        if (userOpt.isEmpty()) {
+        if ( userOpt == null || userOpt.isEmpty()) {
             return ResponseEntity.status(401).body("Invalid email or password");
         }
 

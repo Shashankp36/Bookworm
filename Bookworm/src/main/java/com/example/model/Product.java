@@ -18,6 +18,7 @@ public class Product {
     @Column(nullable = false)
     private String title;
 
+    @Lob 
     private String description;
 
     @Column(unique = true, nullable = false)
