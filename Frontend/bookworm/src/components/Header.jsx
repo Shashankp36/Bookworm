@@ -50,7 +50,7 @@ const Header = () => {
         {/* Center Navigation Links */}
         <nav className="absolute left-1/2 transform -translate-x-1/2 flex text-lg font-medium h-full items-center space-x-6 font-serif tracking-wide">
           <CustomNavLink to="/">Home</CustomNavLink>
-          <CustomNavLink to="/books">Ebooks</CustomNavLink>
+          <CustomNavLink to="/Ebooks">Ebooks</CustomNavLink>
           <CustomNavLink to="/audiobooks">Audiobooks</CustomNavLink>
           <CustomNavLink to="/sale">Sale</CustomNavLink>
           <CustomNavLink to="/shelf">MyShelf</CustomNavLink>

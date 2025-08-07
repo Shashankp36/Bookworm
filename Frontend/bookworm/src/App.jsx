@@ -1,10 +1,11 @@
-
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import WelcomePage from "./pages/WelcomePage";
 import HomePage from "./pages/HomePage";
 import Login from "./pages/Login";
 import About_us from "./pages/About_us";
 import Footer from "./pages/Footer";
+import Ebook from "./pages/Ebook";
+import Audiobook from "./pages/Audiobook";
 import Header from "./components/Header";
 
 import { AuthProvider, useAuth } from "./contexts/AuthContext";
@@ -43,20 +44,20 @@ function ConditionalRoutes() {
           }
         />
 
-        {/* ✅ NEW: Public About Us page */}
-        <Route
-          path="/about"
-          element={<About_us />}
-        />
+        {/* ✅ Public About Us page */}
+        <Route path="/about" element={<About_us />} />
 
-        {/* Optional fallback for unknown routes */}
-        <Route
-          path="*"
-          element={<Navigate to="/" replace />}
-        />
+        {/* ✅ eBooks page (adjust access based on your design) */}
+        <Route path="/ebooks" element={<Ebook />} />
+
+        {/* ✅ AudioBooks page (adjust access based on your design) */}
+        <Route path="/audiobooks" element={<Audiobook />} />
+
+        {/* Fallback route */}
+        <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
 
-      {/* ✅ Footer visible always */}
+      {/* ✅ Footer is always visible */}
       <Footer />
     </>
   );

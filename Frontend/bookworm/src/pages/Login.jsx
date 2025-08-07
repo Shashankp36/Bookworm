@@ -214,7 +214,7 @@ const Login = () => {
         {/* Sliding panel */}
         <div className={`absolute top-0 w-1/2 h-full bg-[#B7BBC7] text-black flex flex-col justify-center items-center px-10 transition-all duration-700 ease-in-out z-10 rounded-2xl ${isRegistering ? "left-0" : "right-0"}`}>
           <div className="text-center max-w-[240px]">
-            <h2 className="text-3xl font-bold mb-2">{isRegistering ? "Welcome Back!" : "New here?"}</h2>
+            <h2 className="text-3xl font-bold mb-2">{isRegistering ? "New here?" : "Welcome Back!"}</h2>
             <p className="text-sm mb-4">{isRegistering ? "Already have an account?" : "Don't have an account?"}</p>
             <button onClick={() => { setIsRegistering(!isRegistering); setErrors({}); }} className="bg-white text-indigo-600 font-semibold px-6 py-2 rounded-xl shadow hover:bg-gray-100 transition">
               {isRegistering ? "Login" : "Register"}

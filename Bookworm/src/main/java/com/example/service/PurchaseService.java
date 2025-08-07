@@ -13,13 +13,11 @@ import com.example.model.CartItem;
 import com.example.model.Order;
 import com.example.model.Product;
 import com.example.model.Purchase;
-
-
+//import com.example.model.Purchase.RoyaltyType;
 import com.example.model.Shelf;
 import com.example.model.ShelfItem;
 import com.example.model.ShelfItem.AccessType;
 import com.example.repository.PurchaseRepository;
-
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
