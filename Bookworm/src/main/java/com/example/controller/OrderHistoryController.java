@@ -28,5 +28,6 @@ public class OrderHistoryController {
     	int userId=provider.getCurrentUser().get().getUserId();
         List<OrderItemHistoryDTO> history = orderHistoryService.getOrderHistoryByUserId(userId);
         return ResponseEntity.ok(history);
+        
     }
 }

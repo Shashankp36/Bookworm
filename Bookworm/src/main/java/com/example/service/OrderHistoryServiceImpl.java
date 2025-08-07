@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.dto.OrderItemHistoryDTO;
+import com.example.dto.ProductDTO;
 import com.example.model.Purchase;
 import com.example.model.Rental;
 import com.example.repository.PurchaseRepository;
@@ -34,7 +35,8 @@ public class OrderHistoryServiceImpl implements IOrderHistoryService {
                 p.getPricePaid(),
                 p.getPurchaseDate(),
                 null,
-                null
+                null,
+                new ProductDTO(p.getProduct())
             ));
         }
 
@@ -47,7 +49,8 @@ public class OrderHistoryServiceImpl implements IOrderHistoryService {
                 r.getPricePaid(),
                 null,
                 r.getRentalStart(),
-                r.getRentalEnd()
+                r.getRentalEnd(),
+                new ProductDTO(r.getProduct())
             ));
         }
 
