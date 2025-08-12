@@ -9,6 +9,8 @@ public class ShelfItemDTO {
     private String accessType;
     private String productTitle;
     private String userName;
+    private String coverUrl;   
+    private String productUrl; 
     private String format;
     private LocalDate rentalStartDate;
     private LocalDate rentalEndDate;
@@ -21,12 +23,16 @@ public class ShelfItemDTO {
             this.productTitle = item.getPurchase().getProduct().getTitle();
             this.userName = item.getPurchase().getUser().getUserName();
             this.format = item.getPurchase().getProduct().getFormat().getFormatName();
+            this.coverUrl = item.getPurchase().getProduct().getCoverUrl(); 
+            this.productUrl = item.getPurchase().getProduct().getProductUrl(); 
         } else if (item.getRental() != null) {
             this.productTitle = item.getRental().getProduct().getTitle();
             this.userName = item.getRental().getUser().getUserName();
             this.rentalStartDate = item.getRental().getRentalStart();
             this.rentalEndDate = item.getRental().getRentalEnd();
             this.format = item.getRental().getProduct().getFormat().getFormatName();
+            this.coverUrl = item.getRental().getProduct().getCoverUrl(); 
+            this.productUrl = item.getRental().getProduct().getProductUrl(); 
         }
     }
 
@@ -86,5 +92,20 @@ public class ShelfItemDTO {
 
     public void setRentalEndDate(LocalDate rentalEndDate) {
         this.rentalEndDate = rentalEndDate;
+    }
+    public String getCoverUrl() {
+        return coverUrl;
+    }
+
+    public void setCoverUrl(String coverUrl) {
+        this.coverUrl = coverUrl;
+    }
+
+    public String getProductUrl() {
+        return productUrl;
+    }
+
+    public void setProductUrl(String productUrl) {
+        this.productUrl = productUrl;
     }
 }
