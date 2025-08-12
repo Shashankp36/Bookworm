@@ -1,5 +1,6 @@
 package com.example.controller;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -83,22 +84,13 @@ public class ProductController {
     }
     
     @GetMapping("/search")
-    public ResponseEntity<List<Product>> searchProducts(
-            @RequestParam(required = false) String Title,
-            @RequestParam(required = false) String Author,
-            @RequestParam(required = false) String Language,
-            @RequestParam(required = false) String Genre,
-            @RequestParam(required = false) String Format,
-            @RequestParam(required = false) String Publisher
-    ) {
-        List<Product> products = productService.searchProducts(Title, Author, Language, Genre, Format, Publisher);
-
-        if (products.isEmpty()) {
-            return ResponseEntity.noContent().build();
-        }
-
-        return ResponseEntity.ok(products);
+    public ResponseEntity<List<Product>> searchByTitleOrAuthor(@RequestParam String keyword) {
+        List<Product> products = productService.searchByTitleOrAuthor(keyword);
+        return products.isEmpty()
+                ? ResponseEntity.ok(Collections.emptyList()) // return empty list so frontend can show "Not Found"
+                : ResponseEntity.ok(products);
     }
+
 
     
     

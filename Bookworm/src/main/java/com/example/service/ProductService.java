@@ -17,6 +17,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -177,16 +178,14 @@ public class ProductService implements IProduct {
                 .collect(Collectors.groupingBy(p -> p.getPublisher().getPublisherName()));
     }
 
-    public List<Product> searchProducts(String title, String author, String language, String genre, String format, String publisher) {
-        return productRepository.findAll().stream()
-            .filter(p -> (title == null || p.getTitle().toLowerCase().contains(title.toLowerCase())))
-            .filter(p -> (author == null || (p.getAuthor() != null && p.getAuthor().getAuthorName().equalsIgnoreCase(author))))
-            .filter(p -> (language == null || (p.getLanguage() != null && p.getLanguage().getLanguageName().equalsIgnoreCase(language))))
-            .filter(p -> (genre == null || (p.getGenre() != null && p.getGenre().getGenreName().equalsIgnoreCase(genre))))
-            .filter(p -> (format == null || (p.getFormat() != null && p.getFormat().getFormatName().equalsIgnoreCase(format))))
-            .filter(p -> (publisher == null || (p.getPublisher() != null && p.getPublisher().getPublisherName().equalsIgnoreCase(publisher))))
-            .collect(Collectors.toList());
+
+    public List<Product> searchByTitleOrAuthor(String keyword) {
+        if (keyword == null || keyword.trim().isEmpty()) {
+            return Collections.emptyList();
+        }
+        return productRepository.searchByTitleOrAuthor(keyword.trim());
     }
+
     
     @Override
     public List<Product> getAllProductsSorted(String sortBy, String sortDir) {
