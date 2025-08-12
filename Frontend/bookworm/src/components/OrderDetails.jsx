@@ -11,10 +11,38 @@ const OrderDetails = ({ orderId, items, onClose }) => {
     "0"
   )}/${purchaseDate.getFullYear()}`;
 
-  const handleDownloadInvoice = () => {
-    // Replace with actual invoice download logic
-    console.log("Downloading invoice for Order ID:", orderId);
+  const handleDownloadInvoice = async () => {
+    try {
+      const response = await fetch(
+        `http://localhost:8080/api/invoice/download/${orderId}`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to download invoice");
+      }
+
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `Invoice_Order_${orderId}.pdf`;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error(error);
+      alert("Could not download invoice. Please try again.");
+    }
   };
+
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-start justify-center pt-20 px-4">

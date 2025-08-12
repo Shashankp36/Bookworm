@@ -138,14 +138,23 @@ const Shelf = () => {
     const timeLeft = isRental ? getTimeLeft(item.rentalEndDate) : null;
 
     const cardContent = (
-      <div className="bg-gray-50 rounded-lg p-4 shadow hover:shadow-xl hover:-translate-y-1 transition-transform duration-300">
-        <div
-          className={`h-36 ${isRental ? "bg-green-200" : "bg-blue-200"
-            } rounded mb-2 flex items-center justify-center text-white font-bold text-sm text-center px-2`}
-        >
+      <div className="bg-white rounded-lg p-4 shadow hover:shadow-xl hover:-translate-y-1 transition-transform duration-300 cursor-pointer">
+        {/* Cover Image */}
+        <img
+          src={item.coverUrl}
+          alt={item.productTitle}
+          className="h-40 w-full object-cover rounded mb-3"
+        />
+
+        {/* Title */}
+        <h3 className="text-sm font-semibold text-gray-800 truncate">
           {item.productTitle}
-        </div>
+        </h3>
+
+        {/* Format */}
         <p className="text-sm text-gray-600 capitalize">{item.format}</p>
+
+        {/* Rental time left */}
         {isRental && (
           <div className="mt-2 text-xs text-red-600 font-semibold">
             {timeLeft}
@@ -154,19 +163,20 @@ const Shelf = () => {
       </div>
     );
 
-    return item.productUrl ? (
+    // Always wrap in <a> if productUrl is available
+    return (
       <a
-        href={item.productUrl}
+        href={item.productUrl || "#"}
         target="_blank"
         rel="noopener noreferrer"
         className="block"
       >
         {cardContent}
       </a>
-    ) : (
-      <div>{cardContent}</div>
     );
   };
+
+
 
   return (
     <div className="min-h-screen bg-gray-100 p-6">
