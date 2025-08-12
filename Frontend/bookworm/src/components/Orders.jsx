@@ -7,7 +7,7 @@ const OrderHistory = () => {
   const [groupedOrders, setGroupedOrders] = useState({});
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
-  const ordersPerPage = 4;
+  const ordersPerPage = 6;
 
   useEffect(() => {
     fetch("http://localhost:8080/api/history/user", {
@@ -53,7 +53,11 @@ const OrderHistory = () => {
       .padStart(2, "0")}/${date.getFullYear()}`;
   };
 
-  const orderGroups = Object.entries(groupedOrders);
+  const orderGroups = Object.entries(groupedOrders).sort((a, b) => {
+    const dateA = new Date(a[1][0].purchaseDate || a[1][0].rentalStart);
+    const dateB = new Date(b[1][0].purchaseDate || b[1][0].rentalStart);
+    return dateB - dateA; // Latest first
+  });
   const totalPages = Math.ceil(orderGroups.length / ordersPerPage);
   const paginatedOrders = orderGroups.slice(
     (currentPage - 1) * ordersPerPage,
