@@ -10,6 +10,17 @@ import org.springframework.data.repository.query.Param;
 
 public interface ProductRepository extends JpaRepository<Product, Integer> {
 	
+	
+  
+    @Query("""
+    	    SELECT p FROM Product p
+    	    WHERE LOWER(p.title) LIKE LOWER(CONCAT('%', :keyword, '%'))
+    	       OR LOWER(p.author.authorName) LIKE LOWER(CONCAT('%', :keyword, '%'))
+    	""")
+    	List<Product> searchByTitleOrAuthor(@Param("keyword") String keyword);
+
+	
+	
 	 List<Product> findByTitleContainingIgnoreCase(String keyword);
 
 	    List<Product> findByPriceBetween(BigDecimal min, BigDecimal max);
@@ -44,4 +55,5 @@ public interface ProductRepository extends JpaRepository<Product, Integer> {
 		List<Product> findByLanguage(Language language);
 
 		List<Product> findByGenre(Genre genre);
+
 }

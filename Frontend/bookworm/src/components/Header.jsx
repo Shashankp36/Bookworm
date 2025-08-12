@@ -37,7 +37,7 @@ const Header = () => {
   }, []);
 
   // ✅ Show lower header only on these routes
-  const showLowerHeader = ["/", "/ebooks", "/audiobooks"].includes(
+  const showLowerHeader = ["/home", "/ebooks", "/audiobooks","/sale"].includes(
     location.pathname.toLowerCase()
   );
 

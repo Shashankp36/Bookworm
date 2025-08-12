@@ -29,15 +29,16 @@ public interface IProduct {
     List<Product> findByGenreName(String genreName);
     List<Product> findByAuthorName(String authorName);
     List<Product> findByPublisherName(String publisherName);
+    List<Product> searchByTitleOrAuthor(String keyword);
+
+    
     
     public Map<String, List<Product>> groupByPublisher();
     public Map<String, List<Product>> groupByFormat();
     public Map<String, List<Product>> groupByLanguage();
     public Map<String, List<Product>> groupByGenre();
     public Map<String, List<Product>> groupByAuthor();
-    
-    public List<Product> searchProducts(String title, String author, String language, String genre, String format, String publisher);
-    
+       
     public List<Product> getAllProductsSorted(String sortBy, String sortDir);
     
     List<Product> filterByLanguageAndGenre(String language, String genre) ;
