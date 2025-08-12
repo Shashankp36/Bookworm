@@ -201,12 +201,12 @@ const Login = () => {
               </div>
             )}
 
-           <button
-  type="submit"
-  className="w-full mb-8 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 px-4 rounded transition"
->
-  {isRegistering ? "Register" : "Login"}
-</button>
+            <button
+              type="submit"
+              className="w-full mb-8 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 px-4 rounded transition"
+            >
+              {isRegistering ? "Register" : "Login"}
+            </button>
 
           </form>
         </div>

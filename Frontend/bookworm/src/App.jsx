@@ -8,6 +8,7 @@ import Ebook from "./pages/Ebook";
 import Audiobook from "./pages/Audiobook";
 import ProductDetail from "./pages/ProductDetail";
 import Header from "./components/Header";
+import Sale from "./pages/Sale";
 
 import CartPage from "./pages/CartPage";
 
@@ -41,15 +42,18 @@ function ConditionalRoutes() {
         <Route
           path="/login"
           element={isLoggedIn ? <Navigate to="/home" replace /> : <Login />}
+
         />
         <Route path="/about" element={<About_us />} />
 
+        <Route path="/sale" element={<Sale />} />
         <Route path="/shelf" element={<Shelf />} />
 
         {/* ✅ eBooks page */}
 
         <Route path="/ebooks" element={<Ebook />} />
         <Route path="/audiobooks" element={<Audiobook />} />
+
         <Route
           path="/product/:id"
           element={isLoggedIn ? <ProductDetail /> : <Navigate to="/login" replace />}
