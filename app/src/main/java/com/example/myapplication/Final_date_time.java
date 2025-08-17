@@ -23,7 +23,7 @@ public class Final_date_time extends AppCompatActivity {
     ArrayList<String> date_arr = new ArrayList<String>();
     ArrayList<String> time_arr = new ArrayList<String>();
     ArrayList<String> acceptor_names = new ArrayList<String>();
-    ArrayList<String> timenacceptors = new ArrayList<String>();
+    ArrayList<Integer> acceptor_no = new ArrayList<Integer>();
 
 
     @Override
@@ -52,8 +52,6 @@ public class Final_date_time extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 finish();
-                //Intent final = new Intent(Final_date_time.this, First.class);
-                //startActivity(final);
 
             }
         });
@@ -68,19 +66,14 @@ public class Final_date_time extends AppCompatActivity {
         date_arr= bundle.getStringArrayList("date_arr");
         time_arr= bundle.getStringArrayList("time_arr");
         acceptor_names= bundle.getStringArrayList("acceptor_names");
+        acceptor_no= bundle.getIntegerArrayList("acceptor_number");
 
-        for( int i=0; i< time_arr.size(); i++)
-        {
-            timenacceptors.add(time_arr.get(i)+ "\n("+ acceptor_names.get(i)+")");
-            System.out.println(timenacceptors.get(i));
-            System.out.println(date_arr.get(i));
 
-        }
 
         finalDataList = new ArrayList<SampleData>();
 
        for(int j=0; j<time_arr.size(); j++) {
-           finalDataList.add(new SampleData(date_arr.get(j), timenacceptors.get(j)));
+           finalDataList.add(new SampleData(date_arr.get(j), time_arr.get(j)+ "\n("+ acceptor_names.get(j)+")" + "\n" +"Number of acceptors: " + Integer.toString(acceptor_no.get(j))));
        }
 
 

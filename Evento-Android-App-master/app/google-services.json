@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "763245368110",
+    "project_id": "events-demo-fa478",
+    "storage_bucket": "events-demo-fa478.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:763245368110:android:ad59f7204a41654b5860bf",
+        "android_client_info": {
+          "package_name": "com.harvin.evento"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDhgZe3cV7yjpUJom3S6PLgEOViTjxEgl4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

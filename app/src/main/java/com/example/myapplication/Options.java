@@ -35,7 +35,6 @@ public class Options extends AppCompatActivity {
     private Button end;
 
     ArrayList<CheckBox> checkBoxes = new ArrayList<CheckBox>();
-
     String meeting_id;
     String name;
     String meeting_name;
@@ -72,12 +71,12 @@ public class Options extends AppCompatActivity {
                     acceptors_names.add(snapshot.child(Integer.toString(i)).child("Acceptors:").getValue().toString());
                     acceptors_no.add(Integer.parseInt(snapshot.child(Integer.toString(i)).child("Num_of_Acceptors:").getValue().toString()));
                     checkBoxes.add(new CheckBox(getApplicationContext()));
-                    (checkBoxes.get(i-1)).setLayoutParams(new LinearLayout.LayoutParams( LinearLayout.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.WRAP_CONTENT));
+                   (checkBoxes.get(i-1)).setLayoutParams(new LinearLayout.LayoutParams( LinearLayout.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.WRAP_CONTENT));
                     (checkBoxes.get(i-1)).setText(date_arr.get(i-1) +"\n"+time_arr.get(i-1));
                     (checkBoxes.get(i-1)).setId(i);
                     if((checkBoxes.get(i-1)).getParent() !=null)
                     {
-                        linearLayout.removeView(checkBoxes.get(i-1));
+                            linearLayout.removeView(checkBoxes.get(i-1));
                     }
 
                      linearLayout.addView(checkBoxes.get(i - 1));
@@ -104,8 +103,8 @@ public class Options extends AppCompatActivity {
         end.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                    CheckBox satView= new CheckBox(getApplicationContext());
-                for (int num = 1; num <= checkBoxes.size(); num++) {
+                CheckBox satView;
+                for (int num = 1; num <= date_arr.size(); num++) {
                     satView= findViewById(num);
                     if(satView.isChecked()) {
                         myRef.child(meeting_id).child(Integer.toString(num)).child("Num_of_Acceptors:").setValue(Integer.toString(acceptors_no.get(num-1)+1));
@@ -121,6 +120,7 @@ public class Options extends AppCompatActivity {
                 Final_DnT.putExtra("meeting_id", meeting_id);
                 Final_DnT.putExtra("meeting_name", meeting_name);
                 Final_DnT.putExtra("acceptor_names", acceptors_names);
+                Final_DnT.putExtra("acceptor_number", acceptors_no);
                 startActivity(Final_DnT);
                 finish();
             }
